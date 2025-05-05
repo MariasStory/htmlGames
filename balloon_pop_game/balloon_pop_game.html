@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balloon Pop Fun!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        .balloon {
+            animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: transform 0.2s;
+            position: absolute;
+            z-index: 10;
+        }
+        
+        .balloon:hover {
+            transform: scale(1.1);
+        }
+        
+        .balloon-pop {
+            transform: scale(1.5);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        }
+        
+        .game-container {
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        
+        .balloon-string {
+            position: absolute;
+            width: 2px;
+            background-color: #666;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blue-100 min-h-screen flex flex-col items-center p-4">
+        <div class="text-center mb-4">
+            <h1 class="text-4xl font-bold text-pink-600 mb-2">🎈 Balloon Pop Fun! 🎈</h1>
+            <p class="text-xl text-blue-800">Pop as many balloons as you can before time runs out!</p>
+        </div>
+        
+        <div class="flex justify-between w-full max-w-2xl mb-4">
+            <div class="bg-white rounded-lg p-4 shadow-lg">
+                <h2 class="text-xl font-bold text-purple-700">Score: <span id="score">0</span></h2>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-lg">
+                <h2 class="text-xl font-bold text-green-700">Time Left: <span id="time">60</span>s</h2>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-lg">
+                <h2 class="text-xl font-bold text-yellow-600">High Score: <span id="high-score">0</span></h2>
+            </div>
+        </div>
+        
+        <div class="game-container w-full max-w-4xl rounded-xl shadow-xl mb-4 relative" style="flex: 1 0 auto" id="game-area">
+            <div class="absolute inset-0 flex items-center justify-center" id="start-screen">
+                <button id="start-btn" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-2xl shadow-lg transform transition hover:scale-110">
+                    START GAME!
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg p-4 shadow-lg w-full max-w-2xl">
+            <h3 class="text-lg font-bold mb-2 text-blue-800">Balloon Values:</h3>
+            <div class="flex justify-around">
+                <div class="flex items-center">
+                    <div class="w-12 h-16 bg-red-500 rounded-full balloon-shape mr-2"></div>
+                    <span>1 point</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-12 h-16 bg-yellow-400 rounded-full balloon-shape mr-2"></div>
+                    <span>2 points</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-12 h-16 bg-green-500 rounded-full balloon-shape mr-2"></div>
+                    <span>3 points</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-12 h-16 bg-purple-500 rounded-full balloon-shape mr-2"></div>
+                    <span>5 points!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="pop-sound" src="party-balloon-pop.mp3" preload="auto"></audio>
+    <audio id="game-music" src="success.mp3" loop preload="auto"></audio>
+    
+    <script>
+        // Game variables
+        let score = 0;
+        let timeLeft = 60;
+        let highScore = localStorage.getItem('balloonPopHighScore') || 0;
+        let gameInterval;
+        let balloonInterval;
+        let isGameRunning = false;
+        const balloonColors = [
+            {color: 'bg-red-500', value: 1}, 
+            {color: 'bg-yellow-400', value: 2},
+            {color: 'bg-green-500', value: 3},
+            {color: 'bg-purple-500', value: 5}
+        ];
+        
+        // DOM elements
+        const gameArea = document.getElementById('game-area');
+        const startScreen = document.getElementById('start-screen');
+        const startBtn = document.getElementById('start-btn');
+        const scoreDisplay = document.getElementById('score');
+        const timeDisplay = document.getElementById('time');
+        const highScoreDisplay = document.getElementById('high-score');
+        const popSound = document.getElementById('pop-sound');
+        const gameMusic = document.getElementById('game-music');
+        
+        // Set high score display
+        highScoreDisplay.textContent = highScore;
+        
+        // Start game function
+        function startGame() {
+            // Reset game state
+            score = 0;
+            timeLeft = 60;
+            scoreDisplay.textContent = score;
+            timeDisplay.textContent = timeLeft;
+            isGameRunning = true;
+            
+            // Hide start screen
+            startScreen.style.display = 'none';
+            
+            // Clear any existing balloons
+            const existingBalloons = document.querySelectorAll('.balloon');
+            existingBalloons.forEach(balloon => balloon.remove());
+            const existingBalloonsString = document.querySelectorAll('.balloon-string');
+            existingBalloonsString.forEach(string => string.remove());
+           
+            // Start game timer
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    // Start game music
+                    gameMusic.currentTime = 0;
+                    gameMusic.loop = false
+                    gameMusic.play();
+                    endGame();
+                }
+            }, 1000);
+            
+            // Touch device detection
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+            // Start balloon spawning - faster on mobile
+            const baseInterval = isTouchDevice ? 600 : 800;
+            const nextDelay = baseInterval + (Math.random() * 400 - 200); // 800 ±200 ms
+            balloonInterval = setInterval(createBalloon, nextDelay);
+        }
+        
+        // Create a new balloon
+        function createBalloon() {
+            if (!isGameRunning) return;
+            
+            const balloonType = Math.floor(Math.random() * balloonColors.length);
+            const balloonColor = balloonColors[balloonType].color;
+            const balloonValue = balloonColors[balloonType].value;
+            
+            const balloon = document.createElement('div');
+            balloon.className = `balloon ${balloonColor} w-12 h-16 rounded-full`;
+            
+            // Random position (keeping balloon fully visible)
+            const gameWidth = gameArea.clientWidth;
+            const gameHeight = gameArea.clientHeight;
+            const left = Math.random() * (gameWidth - 60);
+            const top = gameHeight;
+            
+            balloon.style.left = `${left}px`;
+            balloon.style.top = `${top}px`;
+            
+            // Add string
+            const string = document.createElement('div');
+            string.className = 'balloon-string';
+            string.style.left = `${left + 25}px`;
+            string.style.top = `${top + 60}px`;
+            string.style.height = '30px';
+            
+            // Add data attributes
+            balloon.dataset.value = balloonValue;
+            
+            // Add click event
+            balloon.addEventListener('click', popBalloon);
+            balloon.addEventListener('touchstart', popBalloon, { passive: false });
+            
+            // Add to game area
+            gameArea.appendChild(balloon);
+            gameArea.appendChild(string);
+            
+            // Float animation
+            const floatSpeed = 2 + Math.random() * 3;
+            const floatDistance = 100 + Math.random() * 100;
+            
+            let floatPosition = top;
+            const floatInterval = setInterval(() => {
+                if (!isGameRunning) {
+                    clearInterval(floatInterval);
+                    return;
+                }
+                
+                floatPosition -= floatSpeed;
+                balloon.style.top = `${floatPosition}px`;
+                string.style.top = `${floatPosition + 60}px`;
+                
+                // Remove if balloon floats off screen
+                if (floatPosition < -100) {
+                    clearInterval(floatInterval);
+                    balloon.remove();
+                    string.remove();
+                }
+            }, 30);
+            
+            // Store interval ID to clear later
+            balloon.dataset.interval = floatInterval;
+        }
+        
+        // Pop a balloon
+        function popBalloon(e) {
+            // Prevent default for touch events to avoid delays
+            if (e.type === 'touchstart') {
+                e.preventDefault();
+            }
+
+            if (!isGameRunning) return;
+            
+            const balloon = e.target;
+            const value = parseInt(balloon.dataset.value);
+            
+            // Add to score
+            score += value;
+            scoreDisplay.textContent = score;
+            
+            // Play pop sound
+            popSound.currentTime = 0;
+            popSound.play();
+            
+            // Pop animation
+            balloon.classList.add('balloon-pop');
+            
+            // Create confetti
+            createConfetti(parseInt(balloon.style.left), parseInt(balloon.style.top), value);
+            
+            // Remove balloon after animation
+            setTimeout(() => {
+                balloon.remove();
+                
+                // Find and remove the string
+                const strings = document.querySelectorAll('.balloon-string');
+                strings.forEach(string => {
+                    if (parseInt(string.style.left) === parseInt(balloon.style.left) + 25) {
+                        string.remove();
+                    }
+                });
+            }, 300);
+            
+            // Clear the float interval
+            clearInterval(parseInt(balloon.dataset.interval));
+        }
+        
+        // Create confetti effect
+        function createConfetti(x, y, count) {
+            for (let i = 0; i < count * 3; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random color
+                const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random shape
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                // Position
+                confetti.style.left = `${x + 20 + (Math.random() * 20 - 10)}px`;
+                confetti.style.top = `${y + 20}px`;
+                
+                // Random size
+                const size = 5 + Math.random() * 10;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                
+                // Add animation
+                confetti.style.animation = `confetti-fall ${1 + Math.random() * 2}s linear forwards`;
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                gameArea.appendChild(confetti);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+        
+        // End game function
+        function endGame() {
+            isGameRunning = false;
+            
+            // Clear intervals
+            clearInterval(gameInterval);
+            clearInterval(balloonInterval);
+            
+            // Stop music
+            // gameMusic.pause();
+            
+            // Update high score if needed
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('balloonPopHighScore', highScore);
+                highScoreDisplay.textContent = highScore;
+                
+                // Show celebration
+                const celebration = document.createElement('div');
+                celebration.className = 'absolute inset-0 flex items-center justify-center bg-black bg-opacity-50';
+                celebration.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg text-center">
+                        <h2 class="text-3xl font-bold text-purple-600 mb-4">NEW HIGH SCORE! 🎉</h2>
+                        <p class="text-xl mb-4">Your score: ${score}</p>
+                        <button id="play-again-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                            Play Again!
+                        </button>
+                    </div>
+                `;
+                gameArea.appendChild(celebration);
+                
+                document.getElementById('play-again-btn').addEventListener('click', () => {
+                    celebration.remove();
+                    startGame();
+                });
+            } else {
+                // Show game over screen
+                const gameOver = document.createElement('div');
+                gameOver.className = 'absolute inset-0 flex items-center justify-center bg-black bg-opacity-50';
+                gameOver.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg text-center">
+                        <h2 class="text-3xl font-bold text-red-600 mb-4">GAME OVER!</h2>
+                        <p class="text-xl mb-2">Your score: ${score}</p>
+                        <p class="text-lg mb-4">High score: ${highScore}</p>
+                        <button id="play-again-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                            Play Again!
+                        </button>
+                    </div>
+                `;
+                gameArea.appendChild(gameOver);
+                
+                const playAgainBtn = document.getElementById('play-again-btn');
+                playAgainBtn.addEventListener('click', () => {
+                    gameOver.remove();
+                    startGame();
+                });
+                playAgainBtn.addEventListener('touchend', () => {
+                    gameOver.remove();
+                    startGame();
+                });
+
+            }
+        }
+        
+        // Start button event
+        startBtn.addEventListener('click', startGame);
+        
+        // Easter egg - background click
+        gameArea.addEventListener('click', (e) => {
+            if (e.target === gameArea && isGameRunning) {
+                // Penalty for missing a balloon
+                score = Math.max(0, score - 1);
+                scoreDisplay.textContent = score;
+                
+                // Show "missed" text
+                const missedText = document.createElement('div');
+                missedText.className = 'absolute text-red-600 font-bold text-xl';
+                missedText.textContent = '-1';
+                missedText.style.left = `${e.clientX - gameArea.getBoundingClientRect().left}px`;
+                missedText.style.top = `${e.clientY - gameArea.getBoundingClientRect().top}px`;
+                
+                gameArea.appendChild(missedText);
+                
+                // Animate and remove
+                let opacity = 1;
+                let top = parseInt(missedText.style.top);
+                const fadeInterval = setInterval(() => {
+                    opacity -= 0.05;
+                    top -= 2;
+                    missedText.style.opacity = opacity;
+                    missedText.style.top = `${top}px`;
+                    
+                    if (opacity <= 0) {
+                        clearInterval(fadeInterval);
+                        missedText.remove();
+                    }
+                }, 50);
+            }
+        });
+    </script>
+</body>
+</html>
