@@ -32,7 +32,7 @@ Get ready to click, type, and play! Here are the games currently live in our col
 [![Balloon Pop Game Screenshot/GIF](placeholder_link_to_balloon_pop_image_or_gif.gif)](./balloon_pop_game/)
 *Click image or link above to see the code!*
 
-**➡️ [Play Balloon Pop Mania LIVE!](https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/balloon_pop_game/index.html) ⬅️** *(Replace with your GitHub Pages link)*
+**➡️ [Play Balloon Pop Mania LIVE!](https://rawcdn.githack.com/MariasStory/htmlGames/b052b7edab9f957fa10ab255372a4d20b82ee5aa/balloon_pop_game/balloon_pop_game.html) ⬅️** 
 
 ---
 
@@ -48,7 +48,7 @@ Get ready to click, type, and play! Here are the games currently live in our col
 [![Spell Game Screenshot/GIF](placeholder_link_to_spell_game_image_or_gif.gif)](./spell_game/)
 *Click image or link above to see the code!*
 
-**➡️ [Play Spell Master Challenge LIVE!](https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/spell_game/index.html) ⬅️** *(Replace with your GitHub Pages link)*
+**➡️ [Play Spell Master Challenge LIVE!](https://rawcdn.githack.com/MariasStory/htmlGames/b052b7edab9f957fa10ab255372a4d20b82ee5aa/spell_game/spell_game.html) ⬅️** 
 
 ---
 
