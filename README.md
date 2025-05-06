@@ -117,7 +117,7 @@ Please read our [**CONTRIBUTING.md**](CONTRIBUTING.md) guide (you might need to 
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. (You should add an MIT License file to your repository).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
