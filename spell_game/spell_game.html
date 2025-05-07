@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wrong Words! ⭐ Pro</title>
+    <title>Spell Master! ⭐ Pro</title> <!-- Changed title to match h1 -->
+    <link href='https://fonts.googleapis.com/css?family=Luckiest Guy' rel='stylesheet'>
     <style>
         /* Basic Reset & Font */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Open+Sans&display=swap');
 
         :root {
             --primary-color: #ff6347; /* Tomato */
@@ -19,6 +19,7 @@
             --light-accent-bg: #fff0f5; /* LavenderBlush */
             --success-color: #228b22; /* ForestGreen */
             --error-color: #dc143c; /* Crimson */
+            --info-color: #17a2b8; /* Info Blue */
         }
 
         body {
@@ -37,7 +38,6 @@
         /* --- Background Animations (Bubbles) --- */
         #background-bubbles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; }
         .bubble { position: absolute; background-color: rgba(255, 255, 255, 0.15); border-radius: 50%; bottom: -150px; animation: rise 10s infinite ease-in; opacity: 0; }
-        /* Bubble definitions (same as before) */
         .bubble:nth-child(1) { width: 40px; height: 40px; left: 10%; animation-duration: 12s; animation-delay: 0s; }
         .bubble:nth-child(2) { width: 20px; height: 20px; left: 20%; animation-duration: 8s; animation-delay: 1s; }
         .bubble:nth-child(3) { width: 50px; height: 50px; left: 35%; animation-duration: 15s; animation-delay: 2s; }
@@ -45,7 +45,7 @@
         .bubble:nth-child(5) { width: 60px; height: 60px; left: 65%; animation-duration: 11s; animation-delay: 3s; }
         .bubble:nth-child(6) { width: 25px; height: 25px; left: 80%; animation-duration: 13s; animation-delay: 1.5s; }
         .bubble:nth-child(7) { width: 35px; height: 35px; left: 90%; animation-duration: 7s; animation-delay: 2.5s; }
-        @keyframes rise { /* Same as before */
+        @keyframes rise {
             0% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; }
             100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
         }
@@ -65,36 +65,15 @@
             overflow: hidden;
         }
 
-        /* Title */
-        h1 { font-family: 'Luckiest Guy', cursive; color: var(--primary-color); font-size: 3em; margin-bottom: 10px; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1); letter-spacing: 2px; }
+        h1 { font-family: 'Luckiest Guy', cursive; color: var(--primary-color); font-size: 2.8em; margin-bottom: 10px; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1); letter-spacing: 2px; }
 
-        /* --- Progress Bars --- */
-        .progress-container {
-            margin-bottom: 15px;
-            background-color: #eee;
-            border-radius: 10px;
-            padding: 3px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .progress-bar {
-            height: 20px;
-            border-radius: 7px;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9em;
-            line-height: 20px;
-            transition: width 0.5s ease-out;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden; /* Keep label inside */
-        }
-        .progress-bar span { position: relative; z-index: 1; } /* Ensure text is above gradient */
+        .progress-container { margin-bottom: 15px; background-color: #eee; border-radius: 10px; padding: 3px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+        .progress-bar { height: 20px; border-radius: 7px; text-align: center; color: white; font-weight: bold; font-size: 0.9em; line-height: 20px; transition: width 0.5s ease-out; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .progress-bar span { position: relative; z-index: 1; }
         #time-progress { background: linear-gradient(to right, #4682b4, #81a2bd); width: 100%; }
         #misclick-progress { background: linear-gradient(to right,#ff8c00, #fdc785); width: 100%; }
         .progress-label { font-size: 0.9em; font-weight: bold; margin-bottom: 3px; text-align: left; margin-left: 5px; color: #555; }
 
-        /* Game Info Bar */
         #game-info {
             display: flex;
             justify-content: space-around;
@@ -104,53 +83,40 @@
             border-radius: 15px;
             margin-bottom: 15px;
             border: 2px dashed var(--primary-color);
-            font-size: 1em; /* Slightly smaller */
-            font-weight: bold;
-            flex-wrap: wrap;
-            gap: 8px;
+            font-size: 1em; font-weight: bold; flex-wrap: wrap; gap: 8px;
         }
         #game-info span { background-color: var(--light-accent-bg); padding: 4px 8px; border-radius: 10px; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1); white-space: nowrap; }
         #game-info span strong { color: var(--primary-color); }
         #game-info .star-icon { color: var(--accent-color); font-size: 1.2em; vertical-align: middle; margin-right: 2px; }
 
-        /* Text Area */
         #text-area {
-            background-color: #e0ffff;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            line-height: 1.9; /* Adjust spacing */
-            font-size: 1.2em; /* Adjust size */
-            border: 3px solid #90ee90;
-            min-height: 100px;
-            text-align: left;
-            user-select: none;
-            overflow-wrap: break-word;
+            background-color: #e0ffff; padding: 20px; border-radius: 15px; margin-bottom: 20px;
+            line-height: 1.9; font-size: 1.2em; border: 3px solid #90ee90;
+            min-height: 120px; /* Slightly taller for longer texts */
+            text-align: left; user-select: none; overflow-wrap: break-word;
+            max-height: 300px; overflow-y: auto; /* Allow scrolling for very long texts */
         }
-        #text-area .word { /* Style remains similar */
-             cursor: pointer; padding: 2px 4px; margin: 0 2px; border-radius: 5px; transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease; display: inline-block; }
+        #text-area .word { cursor: pointer; padding: 2px 4px; margin: 0 2px; border-radius: 5px; transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease; display: inline-block; }
         #text-area .word:hover { background-color: rgba(255, 204, 0, 0.4); transform: scale(1.05); }
         .word.correctly-identified { background-color: #90ee90; color: var(--success-color); text-decoration: line-through; cursor: default; font-weight: bold; box-shadow: 0 0 5px #90ee90; pointer-events: none; transition: background-color 0.3s ease, color 0.3s ease, text-decoration-color 0.3s ease; }
         .word.incorrectly-clicked { background-color: #ffcccb; animation: shake 0.3s ease; }
         .word.hinted { border: 2px dashed var(--secondary-color); animation: pulse 1s infinite alternate; }
+        .word.corrected-span { background-color: bisque; padding: 2px 4px; margin: 0 2px; border-radius: 5px; font-style: italic; color: #555; }
 
-        #text-area-container {
-            position: relative;
-            display: inline-block; /* Keep width tight to content */
-        }
-        #overlay1 {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            /* background: rgba(255,255,255,0.6); /* Semi-transparent to "disable" */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            pointer-events: all;
-        }
 
-        #overlay button {
-            z-index: 3;
+        #text-area-container { position: relative; display: block; /* Was inline-block, block helps with centering overlay */ }
+        #progress-overlay { /* Renamed from overlay1 for clarity */
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.3); /* Slightly more opaque */
+            display: flex; flex-direction: column; /* For message + button */
+            align-items: center; justify-content: center;
+            z-index: 2; pointer-events: all;
+            border-radius: 15px; /* Match text-area */
+        }
+        #progress-overlay-message {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 1.8em; color: var(--primary-color);
+            margin-bottom: 15px; text-shadow: 1px 1px var(--light-bg);
         }
         #text-area.disabled {
             pointer-events: none;
@@ -158,124 +124,82 @@
             opacity: 0.7;
         }
 
-        /* Controls Area & Buy Buttons */
         #controls, #buy-controls { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
         #buy-controls { margin-bottom: 15px; }
 
-        /* Buttons */
-        button { font-family: 'Luckiest Guy', cursive; font-size: 1.2em; /* Slightly smaller default */ padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; background: linear-gradient(180deg, var(--accent-color), var(--secondary-color)); color: white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); letter-spacing: 1px; }
+        button { font-family: 'Luckiest Guy', cursive; font-size: 1.2em; padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; background: linear-gradient(180deg, var(--accent-color), var(--secondary-color)); color: white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); letter-spacing: 1px; }
         button:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); }
         button:active:not(:disabled) { transform: translateY(1px); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
         button:disabled { background: linear-gradient(180deg, #cccccc, #999999); cursor: not-allowed; opacity: 0.7; }
-        #buy-controls button { font-size: 1em; padding: 8px 15px; background: linear-gradient(180deg, #1e90ff, #067ff8);} /* Style buy buttons */
-        #buy-controls button:disabled { background: linear-gradient(180deg, #cccccc, #999999); cursor: not-allowed; opacity: 0.7; }
+        #buy-controls button { font-size: 1em; padding: 8px 15px; background: linear-gradient(180deg, #1e90ff, #067ff8);}
+        #buy-controls button:disabled { background: linear-gradient(180deg, #cccccc, #999999); }
+        #progress-overlay button { font-size: 1.4em; padding: 12px 25px; }
 
-        /* Feedback Area */
-        #feedback { margin-top: 15px; font-size: 1.2em; font-weight: bold; min-height: 25px; transition: opacity 0.5s ease, transform 0.5s ease; position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%) scale(0.8); background-color: rgba(255, 255, 255, 0.9); padding: 8px 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; width: max-content; max-width: 90%; z-index: 5; }
+
+        #feedback { margin-top: 15px; font-size: 1.2em; font-weight: bold; min-height: 25px; transition: opacity 0.5s ease, transform 0.5s ease; position: absolute; bottom: 120px; /* Adjusted if needed */ left: 50%; transform: translateX(-50%) scale(0.8); background-color: rgba(255, 255, 255, 0.9); padding: 8px 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; width: max-content; max-width: 90%; z-index: 5; }
         #feedback.show { opacity: 1; transform: translateX(-50%) scale(1); }
         #feedback.success { color: var(--success-color); border: 2px solid #90ee90; }
         #feedback.error { color: var(--error-color); border: 2px solid #ffcccb; }
         #feedback.info { color: var(--info-color); border: 2px solid #b0e0e6; }
         #feedback.record { color: var(--secondary-color); border: 2px solid var(--accent-color); font-weight: bold; }
-        #feedback.fail { color: var(--error-color); border: 2px solid var(--error-color); font-weight: bold; background-color: #fff0f0; } /* Level fail feedback */
+        #feedback.fail { color: var(--error-color); border: 2px solid var(--error-color); font-weight: bold; background-color: #fff0f0; }
 
-
-        /* Overlay */
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.65); display: flex; justify-content: center; align-items: center; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         #overlay.show { opacity: 1; pointer-events: auto; }
-        #overlay-content { background-color: #fff5e1; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: 5px solid var(--secondary-color); animation: popIn 0.5s ease forwards; transform: scale(0.8); opacity: 0; max-width: 90%; }
+        #overlay-content { background-color: #fff5e1; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: 5px solid var(--secondary-color); animation: popIn 0.5s ease forwards; transform: scale(0.8); opacity: 0; max-width: 90%; max-height: 90vh; overflow-y: auto;}
         #overlay.show #overlay-content { transform: scale(1); opacity: 1; }
         #overlay h2 { font-family: 'Luckiest Guy', cursive; color: var(--primary-color); font-size: 2.2em; margin-bottom: 15px; }
-        #overlay p { font-size: 1.1em; margin-bottom: 12px; color: #555; }
-        #overlay #high-score-info, #overlay #best-time-info { font-size: 1em; color: var(--progress-time-color); font-weight: bold; margin-bottom: 15px; }
+        #overlay p { font-size: 1.1em; margin-bottom: 12px; color: #555; text-align: left; line-height: 1.5; }
+        #overlay p.centered-text { text-align: center; }
+        #overlay #high-score-info, #overlay #highest-round-info { font-size: 1em; color: var(--primary-color); font-weight: bold; margin-bottom: 10px; text-align: center;}
+        #overlay #level-best-time-info { font-size: 1em; color: var(--text-color); font-weight: bold; margin-bottom: 15px; } /* Renamed for clarity */
 
-         /* --- Achievements Display --- */
-        #achievements-display {
-            background-color: #fdf5e6; /* SeaShell */
-            border: 2px dashed var(--secondary-color);
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        #achievements-display h3 {
-            font-family: 'Luckiest Guy', cursive;
-            color: var(--secondary-color);
-            margin-bottom: 10px;
-            font-size: 1.4em;
-        }
-        #achievements-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            list-style: none;
-            padding: 0;
-        }
-        .achievement-item {
-            font-size: 1.8em; /* Size of the icon */
-            opacity: 0.4; /* Dim if not unlocked */
-            transition: opacity 0.4s ease, transform 0.2s ease;
-            cursor: default; /* Indicate it's not clickable */
-        }
-        .achievement-item.unlocked {
-            opacity: 1; /* Full opacity when unlocked */
-        }
-         .achievement-item:hover {
-            transform: scale(1.1);
-         }
 
-        /* Achievement Notification Popup (styling mostly same as before) */
+        #achievements-display { background-color: #fdf5e6; border: 2px dashed var(--secondary-color); border-radius: 15px; padding: 10px 15px; margin-top: 20px; text-align: center; }
+        #achievements-display h3 { font-family: 'Luckiest Guy', cursive; color: var(--secondary-color); margin-bottom: 10px; font-size: 1.4em; }
+        #achievements-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none; padding: 0; }
+        .achievement-item { font-size: 1.8em; opacity: 0.4; transition: opacity 0.4s ease, transform 0.2s ease; cursor: default; }
+        .achievement-item.unlocked { opacity: 1; }
+        .achievement-item:hover { transform: scale(1.1); }
+
         #achievement-popup { position: fixed; bottom: 20px; right: -400px; width: 350px; background: linear-gradient(45deg, var(--accent-color), var(--secondary-color)); color: white; padding: 20px; border-radius: 15px 0 0 15px; box-shadow: -5px 5px 15px rgba(0,0,0,0.3); z-index: 100; transition: right 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-shadow: 1px 1px 2px rgba(0,0,0,0.4); border-left: 5px solid #fff; }
         #achievement-popup.show { right: 0; }
         #achievement-popup h3 { font-family: 'Luckiest Guy', cursive; margin: 0 0 5px 0; font-size: 1.5em; display: flex; align-items: center; }
         #achievement-popup h3::before { content: '🏆'; margin-right: 10px; font-size: 1.3em; }
         #achievement-popup p { margin: 0; font-size: 1em; }
 
-        /* Animations */
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 174, 66, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 174, 66, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 174, 66, 0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8) rotate(-5deg); } to { opacity: 1; transform: scale(1) rotate(0deg); } }
-        /* Idle Shake Animation */
-        @keyframes idleWiggle {
-             0%, 100% { transform: rotate(0deg); }
-             25% { transform: rotate(-2deg); }
-             75% { transform: rotate(2deg); }
-        }
-        .idle-shake {
-            animation: idleWiggle 0.5s ease-in-out 2; /* Wiggle twice */
-        }
+        @keyframes idleWiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(2deg); } }
+        .idle-shake { animation: idleWiggle 0.5s ease-in-out 2; }
 
-
-         /* Small screen adjustments */
         @media (max-width: 600px) {
-            h1 { font-size: 2.2em; }
+            h1 { font-size: 2.0em; }
             #game-container { padding: 15px 10px; }
             .progress-bar { height: 18px; line-height: 18px; font-size: 0.8em;}
-            #game-info { font-size: 0.85em; padding: 6px 10px; gap: 4px;}
-            #game-info span { padding: 3px 6px;}
-            #text-area { font-size: 1em; line-height: 1.8; padding: 15px; }
+            #game-info { font-size: 0.80em; padding: 6px 8px; gap: 3px;} /* smaller gap */
+            #game-info span { padding: 2px 5px;} /* smaller padding */
+            #text-area { font-size: 1em; line-height: 1.8; padding: 15px; min-height: 100px; max-height: 200px;}
             button { font-size: 1.1em; padding: 8px 15px; }
-             #buy-controls button { font-size: 0.9em; padding: 6px 12px; }
-            #feedback { font-size: 1em; bottom: 100px; padding: 6px 12px; }
+            #buy-controls button { font-size: 0.9em; padding: 6px 12px; }
+            #progress-overlay button { font-size: 1.2em; padding: 10px 20px; }
+            #progress-overlay-message { font-size: 1.5em; }
+            #feedback { font-size: 1em; bottom: 90px; padding: 6px 12px; }
             #overlay h2 { font-size: 1.8em; }
-            #overlay p { font-size: 1em; }
-             #achievements-display h3 { font-size: 1.2em; }
-             .achievement-item { font-size: 1.5em; gap: 10px;}
-             #achievement-popup { width: 90%; max-width: 280px; right: -300px; padding: 15px;}
-             #achievement-popup.show { right: 0; }
-             #achievement-popup h3 { font-size: 1.2em; }
-             #achievement-popup p { font-size: 0.85em; }
-             .bubble:nth-child(6), .bubble:nth-child(7) { display: none; }
+            #overlay p { font-size: 0.9em; }
+            #achievements-display h3 { font-size: 1.2em; }
+            .achievement-item { font-size: 1.5em; gap: 10px;}
+            #achievement-popup { width: 90%; max-width: 280px; right: -300px; padding: 15px;}
+            #achievement-popup.show { right: 0; }
+            #achievement-popup h3 { font-size: 1.2em; }
+            #achievement-popup p { font-size: 0.85em; }
+            .bubble:nth-child(5), .bubble:nth-child(6), .bubble:nth-child(7) { display: none; } /* Hide more bubbles on small screens */
         }
-
     </style>
 </head>
 <body>
-
-    <!-- Background Bubbles -->
     <div id="background-bubbles">
-        <!-- Bubble divs -->
         <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div>
         <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div>
     </div>
@@ -283,7 +207,6 @@
     <div id="game-container">
         <h1>Spell Master!</h1>
 
-         <!-- Progress Bars -->
          <div class="progress-label">Time Remaining:</div>
         <div class="progress-container">
             <div id="time-progress" class="progress-bar"><span>--:--</span></div>
@@ -293,26 +216,24 @@
             <div id="misclick-progress" class="progress-bar"><span>- / -</span></div>
         </div>
 
-
         <div id="game-info">
-            <span id="round-display">Round: <strong>1</strong></span>
-            <span id="level-display">Level: <strong>1</strong></span>
+            <span id="round-display">Round: <strong>-</strong></span>
+            <span id="segment-display">Test: <strong>- / -</strong></span> <!-- Was level-display -->
             <span id="score-display"><span class="star-icon">⭐</span> Stars: <strong>0</strong></span>
             <span id="words-left-display">Errors Left: <strong>-</strong></span>
-            <span id="best-time-display" title="Best time for this level">Best: <strong>--:--</strong></span>
+            <span id="best-time-display" title="Best time for this test">Segment Best: <strong>--:--</strong></span>
         </div>
 
-        <div id="text-area-container" style="position: relative; display: inline-block;">
+        <div id="text-area-container">
             <div id="text-area">
                 Welcome! Click 'Start Game' to begin.
             </div>
-            <!-- Overlay: hidden by default -->
-            <div id="overlay1" style="display: none;">
-                <button id="next-level-button">Next Level</button>
+            <div id="progress-overlay" style="display: none;"> <!-- Was overlay1 -->
+                <div id="progress-overlay-message">Segment Complete!</div>
+                <button id="next-segment-button">Next Test</button> <!-- Was next-level-button -->
             </div>
         </div>
 
-         <!-- Buy Controls -->
          <div id="buy-controls">
              <button id="buy-time-button" disabled>Buy Time (+15s)</button>
              <button id="buy-misclick-button" disabled>Buy Misclick (+1)</button>
@@ -325,61 +246,45 @@
             <button id="assist-button" disabled>Assist</button>
         </div>
 
-         <!-- Achievements Display Area -->
         <div id="achievements-display">
             <h3>Trophies</h3>
-            <ul id="achievements-list">
-                <!-- Achievement items will be added by JS -->
-            </ul>
+            <ul id="achievements-list"></ul>
         </div>
 
-
-        <!-- Overlay for Start/Game Over/Level Failed -->
         <div id="overlay">
             <div id="overlay-content">
                 <h2 id="overlay-title">Welcome!</h2>
-                <p id="overlay-message">Find the wrong words as fast as you can!</p>
-                <p id="high-score-info" style="display: none;">High Score: <span class="star-icon">⭐</span> <strong>0</strong></p>
-                <p id="best-time-info" style="display: none;">Level Best Time: <strong>--:--</strong></p>
+                <div id="overlay-message-container"> <!-- Container for better scroll control -->
+                    <p id="overlay-message">Find the wrong words as fast as you can!</p>
+                </div>
+                <p id="high-score-info" class="centered-text" style="display: none;">High Score: <span class="star-icon">⭐</span> <strong>0</strong></p>
+                <p id="highest-round-info" class="centered-text" style="display: none;">Highest Round: <strong>0</strong></p>
+                <p id="level-best-time-info" style="display: none;">Segment Best Time: <strong>--:--</strong></p> <!-- Was best-time-info -->
                 <button id="overlay-button">Start Game</button>
-                 <button id="retry-level-button" style="display: none;">Retry Level</button>
+                <button id="retry-level-button" style="display: none;">Retry Segment</button>
             </div>
         </div>
 
-        <!-- Achievement Notification Area -->
         <div id="achievement-popup">
             <h3 id="achievement-title">Achievement Unlocked!</h3>
             <p id="achievement-desc">Description goes here.</p>
         </div>
-
     </div>
 
     <script>
-        // --- Source Texts for Level Generation ---
-        const sourceTexts = [
-            "The quick brown fox jumps over the lazy dog near the river bank.",
-            "My friend has a very playful kitten with soft white fur.",
-            "We are learning about planets and stars in our science class this week.",
-            "Reading interesting stories before bedtime is my favorite thing to do.",
-            "Yesterday, we visited the beach and built a giant sandcastle by the ocean.",
-            "My birthday party was amazing with cake, balloons, and many fun games.",
-            "The blue bicycle I received is perfect for riding in the park.",
-            "Dinosaurs lived millions of years ago and were very large creatures.",
-            "My family went on a vacation to the mountains last summer.",
-            "It is important to eat healthy food like fruits and vegetables every day.",
-            "The weather today is sunny and warm, perfect for playing outside.",
-            "Can you believe how quickly the time flies when you are having fun?",
-            "The yellow flowers in the garden smell very sweet in the morning.",
-            "My teacher helps us understand difficult math problems.",
-            "I saw a beautiful rainbow after the rain stopped this afternoon."
-            // Add more diverse sentences here...
-        ];
-        const TOTAL_LEVELS = 10; // How many levels to generate
+        const masterSourceText = `The quick brown fox jumps over the lazy dog near the river bank. My friend has a very playful kitten with soft white fur. We are learning about planets and stars in our science class this week. Reading interesting stories before bedtime is my favorite thing to do. Yesterday, we visited the beach and built a giant sandcastle by the ocean. My birthday party was amazing with cake, balloons, and many fun games. The blue bicycle I received is perfect for riding in the park. Dinosaurs lived millions of years ago and were very large creatures. My family went on a vacation to the mountains last summer. It is important to eat healthy food like fruits and vegetables every day. The weather today is sunny and warm, perfect for playing outside. Can you believe how quickly the time flies when you are having fun? The yellow flowers in the garden smell very sweet in the morning. My teacher helps us understand difficult math problems. I saw a beautiful rainbow after the rain stopped this afternoon.
+A curious squirrel scampered up the old oak tree, its bushy tail twitching. The library is a quiet place filled with adventures waiting on shelves. We baked chocolate chip cookies, and the whole house smelled delicious. The astronaut floated in space, gazing at the Earth below. Learning a new language can open doors to different cultures. The farmer woke up early to milk the cows and feed the chickens. A gentle breeze rustled the leaves in the autumn forest. The detective searched for clues to solve the mysterious case. Playing music with friends is a joyful experience. The tiny seeds we planted will grow into tall sunflowers.
+Every adventure requires a first step, said the wise old owl. The magician pulled a rabbit out of a hat, much to the audience's delight. Building a snowman in winter is a classic childhood memory. The captain steered the ship through stormy seas towards a distant island. Exploring caves can be exciting, but one must always be careful. The scent of rain on dry earth is called petrichor. A group of dolphins leaped playfully through the ocean waves. The artist mixed vibrant colors on the palette before painting. It's fascinating to watch clouds drift across the sky and change their shapes. The old lighthouse has guided sailors safely to shore for many years.
+Remember to always try your best, even when things seem difficult. The chef prepared a gourmet meal with fresh, local ingredients. A flock of geese flew south for the winter in a V-formation. The invention of the printing press changed the world significantly. Ancient civilizations built magnificent structures that still stand today. The sound of a crackling fireplace is cozy on a cold night. We went camping and told stories around the campfire under the stars. The internet connects people from all corners of the globe. A solar eclipse is a rare and spectacular astronomical event. Perseverance and dedication are keys to achieving your goals.
+The world is full of wonders, waiting to be discovered. A tiny hummingbird flitted from flower to flower, sipping nectar. The train chugged along the tracks, through tunnels and over bridges. Learning to ride a bike takes practice and a bit of courage. The museum displayed artifacts from centuries past, telling stories of history. The aroma of freshly brewed coffee filled the morning air. A spider spun an intricate web in the corner of the room. The national park is home to diverse wildlife and breathtaking scenery. Volunteers work hard to make their communities better places. Kindness is a language which the deaf can hear and the blind can see.
+The sun dipped below the horizon, painting the sky in hues of orange and purple. A lone wolf howled at the full moon, its call echoing through the valley. Children laughed as they chased butterflies in a meadow filled with wildflowers. The old clock tower chimed midnight, marking the end of another day. Scientific discoveries constantly expand our understanding of the universe. A hidden waterfall cascaded down mossy rocks into a crystal-clear pool. The aroma of baking bread wafted from the cozy little bakery. Storytelling is an ancient art form that connects generations. The journey of a thousand miles begins with a single step. Mountains stand as silent sentinels, witnessing the passage of time.
+In the heart of the bustling city, a peaceful park offered a green oasis. The gentle lapping of waves on the shore was a soothing sound. Technology has revolutionized how we communicate, work, and play. A painter carefully added details to a landscape, bringing it to life. The starry night sky inspires awe and wonder about the cosmos. Learning from mistakes is an essential part of growth and development. The rustling of leaves in the wind sounded like whispers from nature. A flock of birds soared gracefully overhead, their wings catching the sunlight. Exploring ancient ruins can transport you back in time. Music has the power to evoke emotions and transcend language barriers.`;
+        let allSentences = [];
 
-        // --- DOM Elements ---
-        // (Get elements similar to previous version, adding new ones)
+        // DOM Elements
         const gameContainer = document.getElementById('game-container');
-        const levelDisplay = document.getElementById('level-display');
+        const roundDisplay = document.getElementById('round-display');
+        const segmentDisplay = document.getElementById('segment-display'); // Was level-display
         const scoreDisplay = document.getElementById('score-display');
         const wordsLeftDisplay = document.getElementById('words-left-display');
         const bestTimeDisplay = document.getElementById('best-time-display');
@@ -393,1106 +298,782 @@
         const assistButton = document.getElementById('assist-button');
         const buyTimeButton = document.getElementById('buy-time-button');
         const buyMisclickButton = document.getElementById('buy-misclick-button');
-        const nextLevelButton = document.getElementById('next-level-button');
-        const overlay1 = document.getElementById('overlay1');
+        const nextSegmentButton = document.getElementById('next-segment-button'); // Was next-level-button
+        const progressOverlay = document.getElementById('progress-overlay'); // Was overlay1
+        const progressOverlayMessage = document.getElementById('progress-overlay-message');
         const overlay = document.getElementById('overlay');
         const overlayContent = document.getElementById('overlay-content');
         const overlayTitle = document.getElementById('overlay-title');
+        const overlayMessageContainer = document.getElementById('overlay-message-container');
         const overlayMessage = document.getElementById('overlay-message');
-        const overlayButton = document.getElementById('overlay-button'); // Main action (Start/Play Again)
-        const retryLevelButton = document.getElementById('retry-level-button'); // Specific retry button
+        const overlayButton = document.getElementById('overlay-button');
+        const retryLevelButton = document.getElementById('retry-level-button');
         const highScoreInfo = document.getElementById('high-score-info');
-        const bestTimeInfo = document.getElementById('best-time-info');
+        const highestRoundInfo = document.getElementById('highest-round-info'); // New display
+        const levelBestTimeInfo = document.getElementById('level-best-time-info'); // Was best-time-info
         const achievementPopup = document.getElementById('achievement-popup');
-        const achievementTitle = document.getElementById('achievement-title');
-        const achievementDesc = document.getElementById('achievement-desc');
+        const achievementTitleElement = document.getElementById('achievement-title'); // Renamed to avoid conflict
+        const achievementDescElement = document.getElementById('achievement-desc'); // Renamed
         const achievementsDisplay = document.getElementById('achievements-display');
         const achievementsList = document.getElementById('achievements-list');
-        const starIconSpan = '⭐'; // Reusable star icon HTML
+        const starIconSpan = '⭐';
 
-
-        // --- Game State Variables ---
-        let currentLevelIndex = 0;
-        let score = 0; // Now represents stars
-        let mistakesFound = []; // Words found in the current level
+        // Game State
+        let currentRound = 1;
+        let currentSegmentIndexInRound = 0;
+        let score = 0;
+        let mistakesFound = [];
         let timerInterval;
         let secondsElapsed = 0;
         let timeRemaining = 0;
         let misclicksMade = 0;
         let maxMisclicksAllowed = 0;
-        let currentLevelData = null;
-        let generatedLevels = []; // Store dynamically generated levels for the session
+        let currentSegmentData = null;
+        let generatedRoundSegmentsData = []; // Data for segments of the current round
         let hintActive = false;
         let totalWordsFoundOverall = 0;
-        let gameProgress = {}; // Stores best times, high score, achievements etc.
+        let gameProgress = {};
         let highScore = 0;
+        let highestRoundReached = 1;
+        let totalStarsEverEarned = 0; // For achievements
         let idleTimer;
-        const IDLE_TIMEOUT = 20000; // 20 seconds
+        const IDLE_TIMEOUT = 25000; // 25 seconds
 
-        // Costs (can be adjusted)
-        const BUY_TIME_COST = 15;
-        const BUY_MISCLICK_COST = 25;
-        const BUY_TIME_AMOUNT = 15; // seconds
-        const BUY_MISCLICK_AMOUNT = 1; // allowed misclicks
+        // Costs & Config
+        const BASE_BUY_TIME_COST = 15;
+        const BASE_BUY_MISCLICK_COST = 25;
+        const BUY_TIME_AMOUNT = 15;
+        const BUY_MISCLICK_AMOUNT = 1;
+        const MIN_SENTENCES_PER_SEGMENT = 2;
+        const MAX_SENTENCES_PER_SEGMENT_CAP = 7;
+        const SEGMENTS_PER_ROUND_BASE = 2;
+        const MAX_SEGMENTS_PER_ROUND = 5;
+        let currentSentenceOffsetInMaster = 0; // To track usage from allSentences
 
+        const MISPEL_DIFFICULTY_EASY = 1;
+        const MISPEL_DIFFICULTY_MEDIUM = 2;
+        const MISPEL_DIFFICULTY_HARD = 3;
 
-        // --- Audio Context & Sound Generation (same as previous) ---
+        // Audio
         let audioCtx = null;
         let soundsEnabled = false;
-        // initAudio() and playSound() functions remain the same as the previous version
-        // (Include the full initAudio and playSound functions here from the previous example)
         function initAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); soundsEnabled = true; } catch (e) { console.error("Web Audio API not supported."); soundsEnabled = false; } } }
-        function playSound(type) { if (!soundsEnabled || !audioCtx) return; const now = audioCtx.currentTime; const gainNode = audioCtx.createGain(); gainNode.connect(audioCtx.destination); let osc; /* ... (rest of playSound logic from previous version) ... */
-             if (type === 'correct') { osc = audioCtx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(660, now); osc.frequency.linearRampToValueAtTime(880, now + 0.1); gainNode.gain.setValueAtTime(0.3, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2); osc.connect(gainNode); osc.start(now); osc.stop(now + 0.2); }
-             else if (type === 'incorrect' || type === 'fail') { osc = audioCtx.createOscillator(); osc.type = 'square'; osc.frequency.setValueAtTime(150, now); gainNode.gain.setValueAtTime(0.2, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3); osc.connect(gainNode); osc.start(now); osc.stop(now + 0.3); }
-             else if (type === 'levelUp') { const freqs = [440, 554, 660, 880]; gainNode.gain.setValueAtTime(0.3, now); gainNode.gain.linearRampToValueAtTime(0.001, now + 0.6); freqs.forEach((freq, i) => { const o = audioCtx.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(freq, now + i * 0.1); o.connect(gainNode); o.start(now + i * 0.1); o.stop(now + i * 0.1 + 0.1); }); }
-             else if (type === 'achievement') { const o1 = audioCtx.createOscillator(); const o2 = audioCtx.createOscillator(); o1.type = 'sawtooth'; o2.type = 'sine'; o1.frequency.setValueAtTime(523, now); o2.frequency.setValueAtTime(784, now); gainNode.gain.setValueAtTime(0.25, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.8); o1.connect(gainNode); o2.connect(gainNode); o1.start(now); o1.stop(now + 0.8); o2.start(now); o2.stop(now + 0.8); }
-             else if (type === 'hint' || type === 'assist' || type === 'buy') { osc = audioCtx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(1000, now); osc.frequency.linearRampToValueAtTime(1500, now + 0.1); gainNode.gain.setValueAtTime(0.15, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2); osc.connect(gainNode); osc.start(now); osc.stop(now + 0.2); }
-             else if (type === 'click') { osc = audioCtx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now); gainNode.gain.setValueAtTime(0.1, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05); osc.connect(gainNode); osc.start(now); osc.stop(now + 0.05); }
+        function playSound(type) { if (!soundsEnabled || !audioCtx) return; const now = audioCtx.currentTime; const gainNode = audioCtx.createGain(); gainNode.connect(audioCtx.destination); let osc;
+             if (type === 'correct') { osc = audioCtx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(660, now); osc.frequency.linearRampToValueAtTime(880, now + 0.1); gainNode.gain.setValueAtTime(0.3, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2); }
+             else if (type === 'incorrect' || type === 'fail') { osc = audioCtx.createOscillator(); osc.type = 'square'; osc.frequency.setValueAtTime(150, now); gainNode.gain.setValueAtTime(0.2, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3); }
+             else if (type === 'levelUp' || type === 'roundUp') { const freqs = [440, 554, 660, 880]; gainNode.gain.setValueAtTime(0.3, now); gainNode.gain.linearRampToValueAtTime(0.001, now + 0.6); freqs.forEach((freq, i) => { const o = audioCtx.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(freq, now + i * 0.1); o.connect(gainNode); o.start(now + i * 0.1); o.stop(now + i * 0.1 + 0.1); }); return; /* Special handling for oscillator in this case */ }
+             else if (type === 'achievement') { const o1 = audioCtx.createOscillator(); const o2 = audioCtx.createOscillator(); o1.type = 'sawtooth'; o2.type = 'sine'; o1.frequency.setValueAtTime(523, now); o2.frequency.setValueAtTime(784, now); gainNode.gain.setValueAtTime(0.25, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.8); o1.connect(gainNode); o2.connect(gainNode); o1.start(now); o1.stop(now + 0.8); o2.start(now); o2.stop(now + 0.8); return; }
+             else if (type === 'hint' || type === 'assist' || type === 'buy') { osc = audioCtx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(1000, now); osc.frequency.linearRampToValueAtTime(1500, now + 0.1); gainNode.gain.setValueAtTime(0.15, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2); }
+             else if (type === 'click') { osc = audioCtx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now); gainNode.gain.setValueAtTime(0.1, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05); }
+             else { return; } // Unknown sound type
+             osc.connect(gainNode); osc.start(now); osc.stop(now + (type === 'levelUp' || type === 'roundUp' || type === 'achievement' ? 0.8 : 0.3));
         }
 
-        function showOverlayNextLevel() {
-            overlay1.style.display = 'flex';
+
+        function showProgressOverlay(message) {
+            progressOverlayMessage.textContent = message;
+            progressOverlay.style.display = 'flex';
             textArea.classList.add('disabled');
-            document.getElementById('overlay')
         }
-
-        function hideOverlayNextLevel() {
-            overlay1.style.display = 'none';
+        function hideProgressOverlay() {
+            progressOverlay.style.display = 'none';
             textArea.classList.remove('disabled');
         }
 
-        // --- Local Storage (mostly same, uses score for stars now) ---
-        const STORAGE_KEY = 'wrongWordsProgress_v2'; // Use new key for new structure/currency
+        const STORAGE_KEY = 'spellMasterProgress_v3'; // New key for new structure
         function loadProgress() {
-             const storedProgress = localStorage.getItem(STORAGE_KEY);
-            gameProgress = { achievements: {}, totalWordsFoundOverall: 0 }; // Default structure
-            highScore = 0;
+            const storedProgress = localStorage.getItem(STORAGE_KEY);
+            gameProgress = { achievements: {}, totalWordsFoundOverall: 0, highScore: 0, highestRoundReached: 1, totalStarsEverEarned: 0, segmentBestTimes: {} };
             if (storedProgress) {
                 try {
                     const parsed = JSON.parse(storedProgress);
-                     // Basic validation: check if it has expected structure
-                     if (parsed && typeof parsed === 'object') {
-                         gameProgress = parsed;
-                         // Ensure sub-objects exist
-                         if (!gameProgress.achievements) gameProgress.achievements = {};
-                         if (typeof gameProgress.highScore !== 'number') gameProgress.highScore = 0;
-                         if (typeof gameProgress.totalWordsFoundOverall !== 'number') gameProgress.totalWordsFoundOverall = 0;
-
-                         highScore = gameProgress.highScore;
-                         totalWordsFoundOverall = gameProgress.totalWordsFoundOverall;
-                     }
+                    if (parsed && typeof parsed === 'object') {
+                        gameProgress = { ...gameProgress, ...parsed }; // Merge defaults with loaded
+                        if (!gameProgress.achievements) gameProgress.achievements = {};
+                        if (!gameProgress.segmentBestTimes) gameProgress.segmentBestTimes = {};
+                    }
                 } catch (e) {
                     console.error("Error parsing stored progress, resetting:", e);
-                     localStorage.removeItem(STORAGE_KEY); // Clear corrupted data
+                    localStorage.removeItem(STORAGE_KEY);
                 }
             }
-             initializeAchievements(); // Initialize based on loaded data
-             updateHighScoreDisplay();
-             updateAchievementsDisplay(); // Update main display on load
+            highScore = gameProgress.highScore || 0;
+            highestRoundReached = gameProgress.highestRoundReached || 1;
+            totalWordsFoundOverall = gameProgress.totalWordsFoundOverall || 0;
+            totalStarsEverEarned = gameProgress.totalStarsEverEarned || 0;
+
+            initializeAchievements();
+            updateHighScoreDisplay();
+            updateAchievementsDisplay();
         }
         function saveProgress() {
-            gameProgress.highScore = highScore; // Update high score
-            gameProgress.totalWordsFoundOverall = totalWordsFoundOverall; // Save total words
-            // Update achievements status in gameProgress
-            gameProgress.achievements = {};
-             for (const key in achievements) {
-                if (achievements[key].unlocked) {
-                    gameProgress.achievements[key] = true; // Just store true if unlocked
-                }
-            }
+            gameProgress.highScore = highScore;
+            gameProgress.highestRoundReached = highestRoundReached;
+            gameProgress.totalWordsFoundOverall = totalWordsFoundOverall;
+            gameProgress.totalStarsEverEarned = totalStarsEverEarned;
+            // Achievements are updated directly in gameProgress.achievements
+            // gameProgress.segmentBestTimes is updated in segmentComplete
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(gameProgress));
-            } catch (e) {
-                console.error("Error saving progress to localStorage:", e);
-                 // Maybe notify user storage is full?
-            }
+            } catch (e) { console.error("Error saving progress:", e); }
         }
 
-        // --- Achievements ---
-        let achievements = {}; // Populated by initializeAchievements
+        let achievements = {};
         function initializeAchievements() {
-            // Define achievements with icons for the main display
             achievements = {
-                 'level_1_complete': { name: "Level 1 Explorer", icon: "1️⃣", description: "Complete Level 1", unlocked: gameProgress.achievements?.level_1_complete || false, condition: (lvlIdx) => lvlIdx >= 0 }, // Condition checks index completed
-                 'level_5_complete': { name: "Level 5 Master", icon: "5️⃣", description: "Complete Level 5", unlocked: gameProgress.achievements?.level_5_complete || false, condition: (lvlIdx) => lvlIdx >= 4 },
-                 'all_levels_complete': { name: "Word Wizard!", icon: "👑", description: "Complete all levels", unlocked: gameProgress.achievements?.all_levels_complete || false, condition: (lvlIdx) => lvlIdx >= TOTAL_LEVELS -1 },
-                 'first_word': { name: "Got One!", icon: "🎯", description: "Find your first wrong word", unlocked: gameProgress.achievements?.first_word || false, condition: () => totalWordsFoundOverall >= 1 },
-                 'total_10_words': { name: "Word Spotter", icon: "👀", description: "Find 10 wrong words total", unlocked: gameProgress.achievements?.total_10_words || false, condition: () => totalWordsFoundOverall >= 10 },
-                 'total_50_words': { name: "Super Sleuth", icon: "🕵️", description: "Find 50 wrong words total", unlocked: gameProgress.achievements?.total_50_words || false, condition: () => totalWordsFoundOverall >= 50 },
-                 'no_misclicks_level': { name: "Perfect Aim!", icon: "💯", description: "Complete a level with 0 misclicks", unlocked: gameProgress.achievements?.no_misclicks_level || false, condition: (_, __, misclicks) => misclicks === 0 }, // New condition signature
-                 'fast_level': { name: "Speed Runner", icon: "⚡", description: "Complete a level in under 15 seconds", unlocked: gameProgress.achievements?.fast_level || false, condition: (_, time) => time < 15 },
-                 'bought_something': { name: "Resourceful!", icon: "💡", description: "Buy Time or a Misclick", unlocked: gameProgress.achievements?.bought_something || false, condition: (_, __, ___, action) => action === 'buy' },
+                'first_word': { name: "Got One!", icon: "🎯", description: "Find your first wrong word.", unlocked: false,
+                    condition: (ctx) => ctx.totalWords >= 1 },
+                'total_25_words': { name: "Word Spotter", icon: "👀", description: "Find 25 wrong words total.", unlocked: false,
+                    condition: (ctx) => ctx.totalWords >= 25 },
+                'total_100_words': { name: "Super Sleuth", icon: "🕵️", description: "Find 100 wrong words total.", unlocked: false,
+                    condition: (ctx) => ctx.totalWords >= 100 },
+                'no_misclicks_segment': { name: "Perfect Aim!", icon: "💯", description: "Complete a test with 0 misclicks.", unlocked: false,
+                    condition: (ctx) => ctx.action === 'segment_complete' && ctx.misclicks === 0 },
+                'fast_segment': { name: "Speed Runner", icon: "⚡", description: "Complete a segment in under 20 seconds (Round 1-2) or 30s (Round 3+).", unlocked: false,
+                    condition: (ctx) => ctx.action === 'segment_complete' && ((ctx.round <= 2 && ctx.time < 20) || (ctx.round > 2 && ctx.time < 30)) },
+                'bought_something': { name: "Resourceful!", icon: "💡", description: "Buy Time or a Misclick.", unlocked: false,
+                    condition: (ctx) => ctx.action === 'buy' },
+                'round_3_reached': { name: "Round 3 Challenger", icon: "🥉", description: "Reach Round 3.", unlocked: false,
+                    condition: (ctx) => ctx.highestRound >= 3 },
+                'round_5_reached': { name: "Round 5 Veteran", icon: "🏅", description: "Reach Round 5.", unlocked: false,
+                    condition: (ctx) => ctx.highestRound >= 5 },
+                'round_10_reached': { name: "Round 10 Master", icon: "🏆", description: "Reach Round 10.", unlocked: false,
+                    condition: (ctx) => ctx.highestRound >= 10 },
+                'stars_500_earned': { name: "Star Gatherer", icon: "✨", description: "Accumulate 500 stars in total (across all games).", unlocked: false,
+                    condition: (ctx) => ctx.totalStarsEver >= 500 },
+                'stars_2000_earned': { name: "Star Hoarder", icon: "🌟", description: "Accumulate 2000 stars in total.", unlocked: false,
+                    condition: (ctx) => ctx.totalStarsEver >= 2000 },
+                'pure_skill_round': { name: "Pure Skill Round", icon: "💪", description: "Complete an entire round without using Hints or Assists.", unlocked: false,
+                    condition: (ctx) => ctx.action === 'round_complete_pure' } // This needs special tracking
             };
-            // Populate the main achievements display
+             // Load unlocked status from gameProgress
+             for (const key in achievements) {
+                 if (gameProgress.achievements[key]) {
+                     achievements[key].unlocked = true;
+                 }
+             }
             renderAchievementsList();
         }
         function renderAchievementsList() {
-             achievementsList.innerHTML = ''; // Clear existing
+             achievementsList.innerHTML = '';
              for (const key in achievements) {
                  const ach = achievements[key];
                  const li = document.createElement('li');
                  li.classList.add('achievement-item');
                  li.textContent = ach.icon;
                  li.title = `${ach.name}: ${ach.description}${ach.unlocked ? ' (Unlocked!)' : ''}`;
-                 if (ach.unlocked) {
-                     li.classList.add('unlocked');
-                 }
+                 if (ach.unlocked) li.classList.add('unlocked');
                  achievementsList.appendChild(li);
              }
         }
-        function updateAchievementsDisplay() {
-            const items = achievementsList.querySelectorAll('.achievement-item');
-            let i = 0;
-            for (const key in achievements) {
-                 if (items[i]) {
-                     items[i].title = `${achievements[key].name}: ${achievements[key].description}${achievements[key].unlocked ? ' (Unlocked!)' : ''}`;
-                     if (achievements[key].unlocked) {
-                         items[i].classList.add('unlocked');
-                     } else {
-                         items[i].classList.remove('unlocked');
-                     }
-                 }
-                i++;
-            }
-        }
+        function updateAchievementsDisplay() { /* Uses renderAchievementsList which now reads current state */ renderAchievementsList(); }
 
-         // Adjusted checkAchievements to pass more context
-         function checkAchievements(levelIndexCompleted = -1, timeTaken = -1, misclicksInLevel = -1, action = null) {
-            let achievementUnlocked = false;
+        function checkAchievements(context) { // context is an object: { round, score, totalWords, misclicks, time, action, highestRound, totalStarsEver, etc. }
+            let achievementUnlockedThisCheck = false;
             for (const key in achievements) {
                 const ach = achievements[key];
                 if (!ach.unlocked) {
                     let conditionMet = false;
-                    try {
-                        // Pass relevant context to the specific achievement's condition function
-                        conditionMet = ach.condition(levelIndexCompleted, timeTaken, misclicksInLevel, action);
-                    } catch (e) { console.error(`Error checking achievement ${key}:`, e); }
+                    try { conditionMet = ach.condition(context); }
+                    catch (e) { console.error(`Error checking achievement ${key}:`, e); }
 
                     if (conditionMet) {
                         ach.unlocked = true;
-                        showAchievementPopup(ach); // Show popup notification
+                        gameProgress.achievements[key] = true; // Persist unlock
+                        showAchievementPopup(ach);
                         playSound('achievement');
-                        achievementUnlocked = true;
+                        achievementUnlockedThisCheck = true;
                     }
                 }
             }
-             if (achievementUnlocked) {
-                 updateAchievementsDisplay(); // Update main display
-                 saveProgress(); // Save progress when an achievement is unlocked
-             }
+            if (achievementUnlockedThisCheck) {
+                updateAchievementsDisplay();
+                saveProgress();
+            }
         }
-        // showAchievementPopup function remains the same as previous version
-        function showAchievementPopup(achievementData) { achievementTitle.textContent = achievementData.name; achievementDesc.textContent = achievementData.description; achievementPopup.classList.add('show'); setTimeout(() => { achievementPopup.classList.remove('show'); }, 4000); }
+        function showAchievementPopup(achievementData) { achievementTitleElement.textContent = achievementData.name; achievementDescElement.textContent = achievementData.description; achievementPopup.classList.add('show'); setTimeout(() => { achievementPopup.classList.remove('show'); }, 4000); }
 
+        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+        function getRandomElement(arr) { if (!arr || arr.length === 0) return undefined; return arr[getRandomInt(0, arr.length)]; }
+        function preserveCase(originalChar, newChar) { return originalChar === originalChar.toUpperCase() ? newChar.toUpperCase() : newChar.toLowerCase(); }
 
-        // --- Helper Functions ---
+        const keyboardProximity = { q: 'wa', a: 'qwsz', z: 'asx', w: 'qase', s: 'qawdzx', x: 'zsdc', e: 'wsdr', d: 'wsxcfr', c: 'xdfv', r: 'edft', f: 'edcvgt', v: 'cdfgb', t: 'rfgy', g: 'rfvbhy', b: 'vfghn', y: 'tghu', h: 'tgyujn', n: 'bghjm', u: 'yhji', j: 'yhnmki', m: 'nhjk,', i: 'ujko', k: 'ujm,lo', o: 'iklp', l: 'ik,.;p', p: 'ol;/'}; // Simplified
 
-        // Get a random integer between min (inclusive) and max (exclusive)
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min)) + min;
-        }
-
-        // Get a random element from an array
-        function getRandomElement(arr) {
-            if (!arr || arr.length === 0) return undefined;
-            return arr[getRandomInt(0, arr.length)];
-        }
-
-        // Preserve case when substituting a character
-        function preserveCase(originalChar, newChar) {
-            return originalChar === originalChar.toUpperCase()
-                ? newChar.toUpperCase()
-                : newChar.toLowerCase();
-        }
-
-        // --- Keyboard Proximity Data (Simple QWERTY representation) ---
-        const keyboardProximity = {
-            q: 'wa', a: 'qwsz', z: 'asx',
-            w: 'qase', s: 'qawdzx', x: 'zsdc',
-            e: 'wsdr', d: 'wsxcfr', c: 'xdfv',
-            r: 'edft', f: 'edcvgt', v: 'cdfgb',
-            t: 'rfgy', g: 'rfvbhy', b: 'vfghn',
-            y: 'tghu', h: 'tgyujn', n: 'bghjm',
-            u: 'yhji', j: 'yhnmki', m: 'nhjk,',
-            i: 'ujko', k: 'ujm,lo', ',': 'mjkl.',
-            o: 'iklp', l: 'ik,.;p', '.': 'lk,;/',
-            p: 'ol;/', ';': 'ol./', '/': 'p;.',
-            // Add numbers and symbols if needed
-        };
-
-        // --- Misspelling Patterns ---
-        // Each pattern is an object: { name: string, apply: function(word): string, weight: number }
         const misspellingPatterns = [
-            {
-                name: "Swap Adjacent Letters",
-                apply: (w) => {
-                    if (w.length < 2) return w;
-                    const i = getRandomInt(0, w.length - 1);
-                    return w.substring(0, i) + w[i+1] + w[i] + w.substring(i+2);
-                },
-                weight: 15
-            },
-            {
-                name: "Substitute Vowel (Common Confusions)",
-                apply: (w) => {
-                    const vowels = 'aeiou';
-                    const commonConfusions = { a: 'e', e: 'ia', i: 'eo', o: 'ua', u: 'o' };
-                    let vowelIndices = [];
-                    for (let i = 0; i < w.length; i++) {
-                        if (vowels.includes(w[i].toLowerCase())) {
-                            vowelIndices.push(i);
-                        }
-                    }
-                    if (vowelIndices.length === 0) return w;
-
-                    const indexToChange = getRandomElement(vowelIndices);
-                    const originalVowel = w[indexToChange].toLowerCase();
-                    const possibleSubs = commonConfusions[originalVowel] || vowels.replace(originalVowel, '');
-                    if (!possibleSubs) return w; // Should not happen with vowels var
-
-                    const newVowel = getRandomElement(Array.from(possibleSubs));
-                    return w.substring(0, indexToChange) + preserveCase(w[indexToChange], newVowel) + w.substring(indexToChange + 1);
-                },
-                weight: 15
-            },
-            {
-                name: "Substitute Consonant (Phonetic)",
-                apply: (w) => {
-                    const phoneticSubs = {
-                        's': 'zc', 'z': 's', 'c': 'ks', 'k': 'c',
-                        'f': 'vph', 'v': 'f', 'p': 'b', 'b': 'p',
-                        't': 'd', 'd': 't', 'g': 'j', 'j': 'g',
-                        'sh': ['ch', 's'], 'ch': ['sh', 't'], 'tion': ['shun', 'sion'], 'sion': ['zhun', 'tion']
-                        // Add more complex multi-char substitutions if needed
-                    };
-                    const consonants = "bcdfghjklmnpqrstvwxyz";
-                    let consonantIndices = [];
-                    for (let i = 0; i < w.length; i++) {
-                        if (consonants.includes(w[i].toLowerCase())) {
-                            consonantIndices.push(i);
-                        }
-                    }
-                    if (consonantIndices.length === 0) return w;
-
-                    const indexToChange = getRandomElement(consonantIndices);
-                    const originalConsonant = w[indexToChange].toLowerCase();
-
-                    if (phoneticSubs[originalConsonant]) {
-                        let subs = phoneticSubs[originalConsonant];
-                        if (typeof subs === 'string') subs = Array.from(subs); // Handle single char string or array
-                        const newConsonant = getRandomElement(subs);
-                        if (newConsonant) {
-                            return w.substring(0, indexToChange) + preserveCase(w[indexToChange], newConsonant) + w.substring(indexToChange + 1);
-                        }
-                    }
-                    // Fallback: substitute with a random different consonant (less realistic)
-                    let randomConsonant = originalConsonant;
-                    while(randomConsonant === originalConsonant) {
-                        randomConsonant = getRandomElement(Array.from(consonants));
-                    }
-                    return w.substring(0, indexToChange) + preserveCase(w[indexToChange], randomConsonant) + w.substring(indexToChange + 1);
-                },
-                weight: 15
-            },
-            {
-                name: "Substitute Consonant (Keyboard Proximity)",
-                apply: (w) => {
-                    let possibleIndices = [];
-                    for (let i = 0; i < w.length; i++) {
-                        if (keyboardProximity[w[i].toLowerCase()]) {
-                            possibleIndices.push(i);
-                        }
-                    }
-                    if (possibleIndices.length === 0) return w;
-
-                    const indexToChange = getRandomElement(possibleIndices);
-                    const originalChar = w[indexToChange].toLowerCase();
-                    const proximityChars = keyboardProximity[originalChar];
-                    if (!proximityChars) return w;
-
-                    const newChar = getRandomElement(Array.from(proximityChars));
-                    return w.substring(0, indexToChange) + preserveCase(w[indexToChange], newChar) + w.substring(indexToChange + 1);
-                },
-                weight: 10 // Slightly less common than simple typos/phonetics
-            },
-            {
-                name: "Remove Double Letter",
-                apply: (w) => {
-                    let doubleIndices = [];
-                    for (let i = 1; i < w.length; i++) {
-                        if (w[i].toLowerCase() === w[i-1].toLowerCase()) {
-                            doubleIndices.push(i);
-                        }
-                    }
-                    if (doubleIndices.length === 0) return w;
-                    const indexToRemove = getRandomElement(doubleIndices);
-                    return w.substring(0, indexToRemove) + w.substring(indexToRemove + 1);
-                },
-                weight: 8
-            },
-            {
-                name: "Add Double Letter",
-                apply: (w) => {
-                    if (w.length < 1) return w;
-                    // Avoid doubling existing doubles for now to prevent tripling etc.
-                    let possibleIndices = [];
-                    for (let i = 0; i < w.length; i++) {
-                        if (i === 0 || w[i].toLowerCase() !== w[i-1].toLowerCase()) {
-                            possibleIndices.push(i);
-                        }
-                    }
-                    if (possibleIndices.length === 0) {
-                        // If all letters are doubles (e.g., 'aaaa'), just pick a random spot
-                        possibleIndices = Array.from(w.keys());
-                    }
-
-                    const indexToAdd = getRandomElement(possibleIndices);
-                    return w.substring(0, indexToAdd) + w[indexToAdd] + w.substring(indexToAdd);
-                },
-                weight: 8
-            },
-            {
-                name: "Delete Random Letter",
-                apply: (w) => {
-                    if (w.length < 3) return w; // Avoid making words too short
-                    const indexToRemove = getRandomInt(0, w.length);
-                    return w.substring(0, indexToRemove) + w.substring(indexToRemove + 1);
-                },
-                weight: 10
-            },
-            {
-                name: "Insert Random Letter",
-                apply: (w) => {
-                    const indexToInsert = getRandomInt(0, w.length + 1);
-                    // Insert a common letter or one related to neighbors? For now, random simple letter.
-                    const commonLetters = "etaoinshrdlu"; // Approx frequency order
-                    const newChar = getRandomElement(Array.from(commonLetters));
-                    // Try to guess case based on neighbors (simple approach)
-                    let charToInsert = newChar;
-                    if (w.length > 0) {
-                        const prevChar = w[indexToInsert - 1];
-                        const nextChar = w[indexToInsert];
-                        if (prevChar && prevChar === prevChar.toUpperCase()) {
-                            charToInsert = newChar.toUpperCase();
-                        } else if (nextChar && nextChar === nextChar.toUpperCase() && indexToInsert === 0) {
-                            // If inserting at the beginning and next is upper
-                            charToInsert = newChar.toUpperCase();
-                        }
-                        // Basic title case check
-                        else if (indexToInsert === 0 && w.length > 0 && w[0] === w[0].toUpperCase()) {
-                            charToInsert = newChar.toUpperCase(); // This might make 'Word' -> 'TWord'
-                        }
-                    }
-
-                    return w.substring(0, indexToInsert) + charToInsert + w.substring(indexToInsert);
-                },
-                weight: 7
-            },
-            {
-                name: "Swap ie/ei",
-                apply: (w) => {
-                    const ieIndex = w.toLowerCase().indexOf('ie');
-                    const eiIndex = w.toLowerCase().indexOf('ei');
-
-                    if (ieIndex !== -1 && (eiIndex === -1 || Math.random() < 0.5)) { // Found 'ie', swap it
-                        return w.substring(0, ieIndex) + preserveCase(w[ieIndex], 'e') + preserveCase(w[ieIndex+1], 'i') + w.substring(ieIndex + 2);
-                    } else if (eiIndex !== -1) { // Found 'ei', swap it
-                        return w.substring(0, eiIndex) + preserveCase(w[eiIndex], 'i') + preserveCase(w[eiIndex+1], 'e') + w.substring(eiIndex + 2);
-                    }
-                    return w; // Neither found
-                },
-                weight: 5
-            },
-            {
-                name: "Drop Silent Final 'e'",
-                apply: (w) => {
-                    // More nuanced: only drop if preceded by consonant + vowel + consonant? Too complex?
-                    // Simple: Drop if ends with 'e' and is not a short word like 'be', 'he', 'she', 'we'
-                    if (w.length > 3 && w.toLowerCase().endsWith('e') && !['be', 'he', 'she', 'we'].includes(w.toLowerCase())) {
-                        // Maybe check if the preceding char is NOT a vowel? a consonant?
-                        const precedingChar = w[w.length-2].toLowerCase();
-                        if (!'aeiou'.includes(precedingChar)) { // Avoid dropping after vowel like in 'blue' -> 'blu' (unless desired)
-                            return w.slice(0, -1);
-                        }
-                    }
-                    return w;
-                },
-                weight: 3
-            },
-            // Add more patterns here:
-            // - Suffix confusion (-able/-ible, -ant/-ent)
-            // - Dropping other silent letters (k in know, b in doubt) - harder to detect context
-            // - Phonetic multi-char (ough -> uff/off/ow, ight -> ite)
+            { name: "Swap Adjacent Letters", apply: (w) => { if (w.length < 2) return w; const i = getRandomInt(0, w.length - 1); return w.substring(0, i) + w[i+1] + w[i] + w.substring(i+2); }, weight: 20, difficultyTier: MISPEL_DIFFICULTY_EASY },
+            { name: "Substitute Vowel", apply: (w) => { const v = 'aeiou'; let vi = []; for (let i=0; i<w.length; i++) if(v.includes(w[i].toLowerCase())) vi.push(i); if(vi.length===0) return w; const idx=getRandomElement(vi); const ov=w[idx].toLowerCase(); const nv=getRandomElement(Array.from(v.replace(ov,''))); return w.substring(0,idx)+preserveCase(w[idx],nv)+w.substring(idx+1); }, weight: 18, difficultyTier: MISPEL_DIFFICULTY_EASY },
+            { name: "Delete Random Letter", apply: (w) => { if (w.length < 3) return w; const i=getRandomInt(0,w.length); return w.substring(0,i)+w.substring(i+1);}, weight: 15, difficultyTier: MISPEL_DIFFICULTY_EASY },
+            { name: "Add Double Letter", apply: (w) => { if(w.length<1) return w; let pi=[]; for(let i=0;i<w.length;i++) if(i===0||w[i].toLowerCase()!==w[i-1].toLowerCase()) pi.push(i); if(pi.length===0) pi=Array.from(w.keys()); const idx=getRandomElement(pi); return w.substring(0,idx)+w[idx]+w.substring(idx);}, weight: 10, difficultyTier: MISPEL_DIFFICULTY_EASY},
+            { name: "Substitute Consonant (Phonetic)", apply: (w) => { const ps={'s':'zc','z':'s','c':'ks','f':'vph','t':'d','g':'j'}; const c="bcdfghjklmnpqrstvwxyz"; let ci=[]; for(let i=0;i<w.length;i++) if(c.includes(w[i].toLowerCase())) ci.push(i); if(ci.length===0) return w; const idx=getRandomElement(ci); const oc=w[idx].toLowerCase(); if(ps[oc]){let s=ps[oc]; const nc=getRandomElement(Array.from(s)); return w.substring(0,idx)+preserveCase(w[idx],nc)+w.substring(idx+1);} let rc=oc; while(rc===oc) rc=getRandomElement(Array.from(c)); return w.substring(0,idx)+preserveCase(w[idx],rc)+w.substring(idx+1);}, weight: 15, difficultyTier: MISPEL_DIFFICULTY_MEDIUM },
+            { name: "Substitute Consonant (Keyboard Proximity)", apply: (w) => { let pi=[]; for(let i=0;i<w.length;i++) if(keyboardProximity[w[i].toLowerCase()]) pi.push(i); if(pi.length===0) return w; const idx=getRandomElement(pi); const oc=w[idx].toLowerCase(); const prox=keyboardProximity[oc]; if(!prox) return w; const nc=getRandomElement(Array.from(prox)); return w.substring(0,idx)+preserveCase(w[idx],nc)+w.substring(idx+1);}, weight: 12, difficultyTier: MISPEL_DIFFICULTY_MEDIUM },
+            { name: "Remove Double Letter", apply: (w) => { let di=[]; for(let i=1;i<w.length;i++) if(w[i].toLowerCase()===w[i-1].toLowerCase()) di.push(i); if(di.length===0) return w; const idx=getRandomElement(di); return w.substring(0,idx)+w.substring(idx+1);}, weight: 8, difficultyTier: MISPEL_DIFFICULTY_MEDIUM },
+            { name: "Insert Random Letter", apply: (w) => { const idx=getRandomInt(0,w.length+1); const cl="etaoinshrdlu"; const nc=getRandomElement(Array.from(cl)); let chr=nc; if(w.length>0){const pC=w[idx-1];const nC=w[idx]; if(pC&&pC===pC.toUpperCase()) chr=nc.toUpperCase(); else if(nC&&nC===nC.toUpperCase()&&idx===0) chr=nc.toUpperCase(); else if(idx===0&&w.length>0&&w[0]===w[0].toUpperCase()) chr=nc.toUpperCase();} return w.substring(0,idx)+chr+w.substring(idx);}, weight: 7, difficultyTier: MISPEL_DIFFICULTY_MEDIUM },
+            { name: "Swap ie/ei", apply: (w) => { const ie=w.toLowerCase().indexOf('ie'); const ei=w.toLowerCase().indexOf('ei'); if(ie!==-1&&(ei===-1||Math.random()<0.5)) return w.substring(0,ie)+preserveCase(w[ie],'e')+preserveCase(w[ie+1],'i')+w.substring(ie+2); else if(ei!==-1) return w.substring(0,ei)+preserveCase(w[ei],'i')+preserveCase(w[ei+1],'e')+w.substring(ei+2); return w;}, weight: 8, difficultyTier: MISPEL_DIFFICULTY_HARD },
+            { name: "Drop Silent Final 'e'", apply: (w) => { if(w.length>3&&w.toLowerCase().endsWith('e')&&!['be','he','she','we'].includes(w.toLowerCase())){const pc=w[w.length-2].toLowerCase(); if(!'aeiou'.includes(pc)) return w.slice(0,-1);} return w;}, weight: 5, difficultyTier: MISPEL_DIFFICULTY_HARD },
         ];
 
-        // --- Level Generation ---
-        function generateMisspelling(word, maxAttempts = 5) {
-            if (!word || word.length < 3) {
-                // console.log(`Word '${word}' too short or invalid, returning original.`);
-                return word; // Don't misspell very short or invalid words
-            }
-
+        function generateMisspelling(word, targetMisspellDifficulty, maxAttempts = 5) {
+            if (!word || word.length < 3) return word;
             const originalWord = word;
             let misspelled = word;
             let attempts = 0;
 
-            // Calculate total weight
-            const totalWeight = misspellingPatterns.reduce((sum, p) => sum + p.weight, 0);
+            const applicablePatterns = misspellingPatterns.filter(p => p.difficultyTier <= targetMisspellDifficulty);
+            if (applicablePatterns.length === 0) { // Fallback if no patterns match (shouldn't happen with tiered approach)
+                applicablePatterns.push(...misspellingPatterns.filter(p => p.difficultyTier === MISPEL_DIFFICULTY_EASY));
+            }
+            if (applicablePatterns.length === 0) return word; // True fallback
+
+            const totalWeight = applicablePatterns.reduce((sum, p) => sum + p.weight, 0);
 
             while (attempts < maxAttempts) {
                 attempts++;
-
-                // Select pattern based on weight
                 let randomWeight = Math.random() * totalWeight;
                 let selectedPattern = null;
-                for (const pattern of misspellingPatterns) {
+                for (const pattern of applicablePatterns) {
                     randomWeight -= pattern.weight;
-                    if (randomWeight <= 0) {
-                        selectedPattern = pattern;
-                        break;
-                    }
+                    if (randomWeight <= 0) { selectedPattern = pattern; break; }
                 }
+                if (!selectedPattern) selectedPattern = getRandomElement(applicablePatterns);
 
-                if (!selectedPattern) {
-                    selectedPattern = getRandomElement(misspellingPatterns); // Fallback if weights fail
+                misspelled = selectedPattern.apply(originalWord);
+
+                const commonShortWords = ['a','an','is','it','in','on','of','to','at','be','we','he','she','me','my','go','so','no','up','us','do','if','or','as','i'];
+                if (misspelled !== originalWord && misspelled.length >= Math.max(1, originalWord.length - 2) &&
+                    !(commonShortWords.includes(misspelled.toLowerCase()) && !commonShortWords.includes(originalWord.toLowerCase())) ) {
+                    return misspelled;
                 }
-
-                // console.log(`Attempt ${attempts}: Trying pattern "${selectedPattern.name}" on "${misspelled}"`);
-                misspelled = selectedPattern.apply(originalWord); // Apply to original word each time for single error
-
-                // Basic check: ensure it actually changed and didn't become too short
-                if (misspelled !== originalWord && misspelled.length >= Math.max(1, originalWord.length - 2)) { // Allow deletion but not too much shrinkage
-                    // console.log(`Success: "${originalWord}" -> "${misspelled}" using "${selectedPattern.name}"`);
-
-                    // VERY basic check to prevent making common short words accidentally
-                    const commonShortWords = ['a', 'an', 'is', 'it', 'in', 'on', 'of', 'to', 'at', 'be', 'we', 'he', 'she', 'me', 'my', 'go', 'so', 'no', 'up', 'us', 'do', 'if', 'or', 'as', 'i'];
-                    if (commonShortWords.includes(misspelled.toLowerCase()) && !commonShortWords.includes(originalWord.toLowerCase())) {
-                        // console.log(`Result "${misspelled}" is a common short word, reverting.`);
-                        misspelled = originalWord; // Revert
-                        continue; // Try another pattern
-                    }
-
-                    return misspelled; // Return the successful misspelling
-                } else {
-                    // console.log(`Pattern "${selectedPattern.name}" failed or produced invalid result ("${misspelled}"). Retrying.`);
-                    misspelled = originalWord; // Reset for next attempt with original word
-                }
+                misspelled = originalWord; // Reset
             }
-
-            // console.log(`Max attempts reached for "${originalWord}", returning original.`);
-            // If all attempts failed to produce a valid *different* word, return original
-            // Or, as a last resort, force a simple adjacent swap if possible
-            if (originalWord.length >= 2) {
-                const i = Math.floor(Math.random() * (originalWord.length - 1));
-                const fallback = originalWord.substring(0, i) + originalWord[i+1] + originalWord[i] + originalWord.substring(i+2);
-                if (fallback !== originalWord) return fallback;
-            }
-
-            return originalWord; // Give up
+            // Force simple swap if all else fails
+            if (originalWord.length >= 2) { const i=getRandomInt(0,originalWord.length-1); const fb=originalWord.substring(0,i)+originalWord[i+1]+originalWord[i]+originalWord.substring(i+2); if(fb!==originalWord) return fb; }
+            return originalWord;
         }
 
+        function splitMasterTextIntoSentences() {
+            const sentences = masterSourceText.match(/[^.!?]+[.!?]+(\s|$)/g);
+            if (sentences) allSentences = sentences.map(s => s.trim()).filter(s => s.length > 10); // Min length for a sentence
+            else allSentences = [masterSourceText];
+            if (allSentences.length === 0) allSentences = ["Default fallback sentence if splitting fails. This text needs more content."]; // Absolute fallback
+        }
 
-        function generateLevelData(levelNum, allSourceTexts) {
-            const difficultyFactor = Math.min(levelNum / TOTAL_LEVELS, 1); // 0 to 1
+        function getTextForSegment(roundNum, sentencesPerSegmentCount) {
+            let selectedSentences = [];
+            if (allSentences.length === 0) return "Error: No sentences available."; // Should not happen with fallback
 
-            // Select a source text (try not to repeat the last one)
-             let textIndex;
-             do {
-                 textIndex = Math.floor(Math.random() * allSourceTexts.length);
-             } while (generatedLevels.length > 0 && textIndex === generatedLevels[generatedLevels.length - 1]?.sourceIndex && allSourceTexts.length > 1);
-             const sourceText = allSourceTexts[textIndex];
+            for (let i = 0; i < sentencesPerSegmentCount; i++) {
+                selectedSentences.push(allSentences[currentSentenceOffsetInMaster % allSentences.length]);
+                currentSentenceOffsetInMaster++;
+            }
+            return selectedSentences.join(" ");
+        }
 
-            // Determine number of errors based on difficulty
-            const minErrors = 1 + Math.floor(difficultyFactor * 3); // e.g., 1-4 errors
-            const maxErrors = 2 + Math.floor(difficultyFactor * 5); // e.g., 2-7 errors
-            const numErrors = Math.floor(Math.random() * (maxErrors - minErrors + 1)) + minErrors;
+        function prepareRoundData(roundNum) {
+            generatedRoundSegmentsData = [];
+            const numSegmentsThisRound = Math.min(MAX_SEGMENTS_PER_ROUND, SEGMENTS_PER_ROUND_BASE + Math.floor((roundNum - 1) / 2)); // e.g. R1:2, R2:2, R3:3, R4:3, R5:4
+            
+            for (let i = 0; i < numSegmentsThisRound; i++) {
+                const sentencesForThisSegment = Math.min(MAX_SENTENCES_PER_SEGMENT_CAP, MIN_SENTENCES_PER_SEGMENT + Math.floor((roundNum -1) * 0.75) + Math.floor(i * 0.25) ); // Scales length with round and segment index
+                const segmentText = getTextForSegment(roundNum, sentencesForThisSegment);
+                generatedRoundSegmentsData.push(generateSegmentData(i, roundNum, segmentText));
+            }
+            // Reset if any round-specific state needs it (like 'used hints this round')
+            gameProgress.usedHintOrAssistThisRound = false; 
+        }
 
-            const words = sourceText.split(/([ .,!?;:\n]+)/); // Split keeping separators
-            const potentialWordsToMisspell = words.filter(w => w.trim().length >= 3 && /^[a-zA-Z]+$/.test(w.trim())); // Words > 2 letters, only alpha
+        function generateSegmentData(segmentNumInRound, roundNum, sourceText) {
+            const words = sourceText.split(/([ .,!?;:\n]+)/);
+            const potentialWordsToMisspell = words.filter(w => w.trim().length >= 3 && /^[a-zA-Z]+$/.test(w.trim()));
+            
+            let targetMisspellDifficulty = MISPEL_DIFFICULTY_EASY;
+            if (roundNum >= 3) targetMisspellDifficulty = MISPEL_DIFFICULTY_MEDIUM;
+            if (roundNum >= 6) targetMisspellDifficulty = MISPEL_DIFFICULTY_HARD;
 
-            const wrongWordsData = []; // Store { original, misspelled } pairs
-            const finalWords = [...words]; // Copy to modify
-             let errorsCreated = 0;
+            const baseErrors = 1 + Math.floor(roundNum / 2);
+            const maxErrorsForSegment = Math.min(7, baseErrors + Math.floor(segmentNumInRound / 2) + Math.floor(potentialWordsToMisspell.length / 10) ); // More errors for longer texts too
+            const minErrorsForSegment = Math.min(maxErrorsForSegment, baseErrors);
+            const numErrors = Math.max(1, getRandomInt(minErrorsForSegment, maxErrorsForSegment + 1));
 
-            // Shuffle potential words to pick randomly
-             potentialWordsToMisspell.sort(() => 0.5 - Math.random());
+            const wrongWordsData = [];
+            const finalWords = [...words];
+            let errorsCreated = 0;
+            potentialWordsToMisspell.sort(() => 0.5 - Math.random());
 
             for (const originalWord of potentialWordsToMisspell) {
                 if (errorsCreated >= numErrors) break;
-
-                 const misspelledWord = generateMisspelling(originalWord);
-
-                 if (misspelledWord !== originalWord && !wrongWordsData.some(d => d.original === originalWord)) {
+                const misspelledWord = generateMisspelling(originalWord, targetMisspellDifficulty);
+                if (misspelledWord !== originalWord && !wrongWordsData.some(d => d.original === originalWord)) {
                     wrongWordsData.push({ original: originalWord, misspelled: misspelledWord });
                     errorsCreated++;
-
-                     // Replace the first occurrence of this original word in the finalWords array
-                     const indexToReplace = finalWords.findIndex(w => w === originalWord);
-                     if (indexToReplace !== -1) {
-                         finalWords[indexToReplace] = misspelledWord;
-                     }
+                    const indexToReplace = finalWords.findIndex(w => w === originalWord);
+                    if (indexToReplace !== -1) finalWords[indexToReplace] = misspelledWord;
+                }
+            }
+            if (errorsCreated === 0 && potentialWordsToMisspell.length > 0) { // Ensure at least one error if possible
+                 const originalWord = potentialWordsToMisspell[0];
+                 const misspelledWord = generateMisspelling(originalWord, targetMisspellDifficulty);
+                 if (misspelledWord !== originalWord) {
+                    wrongWordsData.push({ original: originalWord, misspelled: misspelledWord });
+                    errorsCreated++;
+                    const indexToReplace = finalWords.findIndex(w => w === originalWord);
+                    if (indexToReplace !== -1) finalWords[indexToReplace] = misspelledWord;
                  }
             }
 
-             // Define level parameters based on difficulty
-             const baseTime = 80; // seconds
-             const timeLimit = Math.max(20, Math.floor(baseTime - difficultyFactor * 50)); // Time decreases, min 20s
-             const baseMisclicks = 6;
-             const maxMisclicks = Math.max(2, Math.floor(baseMisclicks - difficultyFactor * 4)); // Allowed misclicks decrease, min 2
 
-             const starsPerWord = 5 + Math.floor(difficultyFactor * 15); // More stars for harder levels
-             const hintCost = 5 + Math.floor(difficultyFactor * 10);
-             const assistCost = 15 + Math.floor(difficultyFactor * 20);
+            const numWordsInText = words.filter(w => w.trim().length > 0).length;
+            const baseTime = 45 + Math.floor(roundNum * 2.5); // Base time increases slightly with round
+            const timePerWordFactor = 1.2 - Math.min(0.5, roundNum * 0.05); // Less time per word in higher rounds
+            const timeLimit = Math.max(25, Math.floor(baseTime + (numWordsInText * timePerWordFactor) + (errorsCreated * (5 - Math.min(2, Math.floor(roundNum/3)))) )); // Time per error also tightens
+
+            const baseMisclicks = 5;
+            const maxMisclicks = Math.max(2, Math.floor(baseMisclicks - Math.floor(roundNum / 3)));
+
+            const starsPerWord = 5 + Math.floor(roundNum * 1.5) + segmentNumInRound;
+            const hintCost = Math.floor( (5 + roundNum * 2) * (starsPerWord / 7.5) ); // Scale cost relative to reward
+            const assistCost = Math.floor( (15 + roundNum * 4) * (starsPerWord / 7.5) );
+
 
             return {
-                level: levelNum + 1,
-                text: finalWords.join(''), // Join back into a string
-                wrongWords: wrongWordsData.map(d => d.misspelled), // List of the misspelled words to find
-                 originalWords: wrongWordsData.map(d => d.original), // Keep original for reference if needed
-                 wrongWordsMap: Object.fromEntries(wrongWordsData.map(d => [d.misspelled, d.original])), // Map misspelled -> original
+                round: roundNum,
+                segment: segmentNumInRound + 1,
+                text: finalWords.join(''),
+                wrongWords: wrongWordsData.map(d => d.misspelled),
+                originalWordsMap: Object.fromEntries(wrongWordsData.map(d => [d.misspelled, d.original])),
                 starsPerWord: starsPerWord,
-                hintCost: hintCost,
-                assistCost: assistCost,
+                hintCost: Math.max(5, hintCost), // Min cost
+                assistCost: Math.max(10, assistCost), // Min cost
                 timeLimit: timeLimit,
                 maxMisclicks: maxMisclicks,
-                sourceIndex: textIndex // Remember which text was used
             };
         }
 
-        function generateAllLevels() {
-            generatedLevels = [];
-            for (let i = 0; i < TOTAL_LEVELS; i++) {
-                generatedLevels.push(generateLevelData(i, sourceTexts));
-            }
-            console.log("Generated Levels:", generatedLevels); // For debugging
-        }
-
-
-        // --- Initialization ---
         function initGame() {
-            loadProgress(); // Load saved data first
-            generateAllLevels(); // Generate level data for this session
-            showOverlay("Welcome!", `Find the ${generatedLevels[0]?.wrongWords.length || 'few'} wrong words. Use hints wisely!`, "Start Game", () => {
-                 initAudio(); // Initialize audio on first user interaction
-                 playSound('click');
-                 startGame();
-             }, false); // Don't show retry initially
+            splitMasterTextIntoSentences();
+            loadProgress();
+            const welcomeTitle = "Welcome to Spell Master!";
+            const welcomeMsg = `
+                <p>Your goal is to find and click all the misspelled words in each test.</p>
+                <p><strong>Progression:</strong></p>
+                <ul>
+                    <li>Advance through <strong>Rounds</strong>. Each round has multiple <strong>Tests</strong>.</li>
+                    <li>Texts get longer and errors become trickier as you progress!</li>
+                </ul>
+                <p><strong>Stars ${starIconSpan}:</strong></p>
+                <ul>
+                    <li>Earn stars for correctly identifying misspelled words.</li>
+                    <li>Use stars to buy <strong>Hints</strong>, <strong>Assists</strong>, extra <strong>Time</strong>, or more <strong>Misclick</strong> allowances.</li>
+                </ul>
+                <p class="centered-text"><strong>Ready to test your spelling prowess?</strong></p>
+            `;
+            showOverlay(welcomeTitle, welcomeMsg, "Start Game", () => {
+                 initAudio(); playSound('click'); startGame();
+            }, false);
 
-            hideOverlayNextLevel();
-            hintButton.disabled = true;
-            assistButton.disabled = true;
-            buyTimeButton.disabled = true;
-            buyMisclickButton.disabled = true;
+            hideProgressOverlay();
+            disableAllGameButtons();
             updateScoreDisplay();
-            updateLevelDisplay('-');
+            updateRoundAndSegmentDisplay('-', '-', '-');
             updateWordsLeftDisplay('-');
-            updateBestTimeDisplay('-');
-            resetIdleTimer(); // Start idle timer
+            updateBestTimeDisplayForSegment('-', '-');
+            resetIdleTimer();
             setupIdleListeners();
         }
 
-         function updateHighScoreDisplay() {
-             if(highScore > 0) {
-                highScoreInfo.innerHTML = `High Score: ${starIconSpan} <strong>${highScore}</strong>`;
-                highScoreInfo.style.display = 'block';
-             } else {
-                 highScoreInfo.style.display = 'none';
-             }
-         }
+        function updateHighScoreDisplay() {
+             if (highScore > 0) { highScoreInfo.innerHTML = `High Score: ${starIconSpan} <strong>${highScore}</strong>`; highScoreInfo.style.display = 'block'; }
+             else { highScoreInfo.style.display = 'none'; }
+             if (highestRoundReached > 1) { highestRoundInfo.innerHTML = `Highest Round: <strong>${highestRoundReached}</strong>`; highestRoundInfo.style.display = 'block'; }
+             else { highestRoundInfo.style.display = 'none'; }
+        }
 
-         // Updated showOverlay to handle different button configurations
-         function showOverlay(title, message, mainButtonText, mainButtonAction, showRetry = false, retryAction = null) {
+        function showOverlay(title, messageHTML, mainButtonText, mainButtonAction, showRetry = false, retryAction = null) {
             overlayTitle.textContent = title;
-            overlayMessage.textContent = message;
+            overlayMessageContainer.innerHTML = messageHTML; // Allows HTML in message
 
-             // Configure Main Button
-             let overlayButton = document.querySelector("#overlay-button");
-             overlayButton.textContent = mainButtonText;
-             const newMainButton = overlayButton.cloneNode(true);
-             document.querySelector("#overlay-content").replaceChild(newMainButton, overlayButton);
-             newMainButton.addEventListener('click', () => { playSound('click'); mainButtonAction(); });
-             // Re-assign DOM variable after replacing node
-             // overlayButton = newMainButton; // This causes issues if called repeatedly, manage via IDs
+            let currentOverlayButton = document.getElementById("overlay-button");
+            const newMainButton = currentOverlayButton.cloneNode(true);
+            newMainButton.textContent = mainButtonText;
+            currentOverlayButton.parentNode.replaceChild(newMainButton, currentOverlayButton);
+            newMainButton.addEventListener('click', () => { playSound('click'); mainButtonAction(); });
+            // Re-assign for clarity, though DOM reference is newMainButton now
+            // overlayButton = newMainButton; 
 
-             // Configure Retry Button
-             const currentRetryButton = document.getElementById('retry-level-button');
-             if (showRetry && retryAction) {
-                 currentRetryButton.textContent = "Retry Level";
-                 const newRetryButton = currentRetryButton.cloneNode(true);
-                 currentRetryButton.parentNode.replaceChild(newRetryButton, currentRetryButton);
-                 newRetryButton.addEventListener('click', () => { playSound('click'); retryAction(); });
-                 newRetryButton.style.display = 'inline-block';
-             } else {
-                 currentRetryButton.style.display = 'none';
-             }
-
-            // Display relevant info
+            const currentRetryBtn = document.getElementById('retry-level-button');
+            if (showRetry && retryAction) {
+                const newRetry = currentRetryBtn.cloneNode(true);
+                newRetry.textContent = "Retry Segment";
+                currentRetryBtn.parentNode.replaceChild(newRetry, currentRetryBtn);
+                newRetry.addEventListener('click', () => { playSound('click'); retryAction(); });
+                newRetry.style.display = 'inline-block';
+            } else {
+                currentRetryBtn.style.display = 'none';
+            }
             updateHighScoreDisplay();
-            bestTimeInfo.style.display = 'none'; // Hide level time by default on overlays
-
+            levelBestTimeInfo.style.display = 'none';
             overlay.classList.add('show');
         }
+        function hideOverlay() { overlay.classList.remove('show'); }
 
-        function hideOverlay() {
-            overlay.classList.remove('show');
-        }
+        function resetIdleTimer() { clearTimeout(idleTimer); removeIdleShake(); idleTimer = setTimeout(triggerIdleShake, IDLE_TIMEOUT); }
+        function setupIdleListeners() { document.addEventListener('mousemove', resetIdleTimer, {passive:true}); document.addEventListener('click',resetIdleTimer); document.addEventListener('keypress',resetIdleTimer); }
+        function triggerIdleShake() { [document.querySelector('h1'), textArea, hintButton, assistButton].filter(el=>el).forEach(el => { el.classList.add('idle-shake'); setTimeout(() => el.classList.remove('idle-shake'), 1000); }); idleTimer = setTimeout(triggerIdleShake, IDLE_TIMEOUT); }
+        function removeIdleShake() { document.querySelectorAll('.idle-shake').forEach(el => el.classList.remove('idle-shake')); }
 
-        // --- Idle Timer ---
-        function resetIdleTimer() {
-            clearTimeout(idleTimer);
-             removeIdleShake(); // Remove shake if currently active
-            idleTimer = setTimeout(triggerIdleShake, IDLE_TIMEOUT);
-        }
-        function setupIdleListeners() {
-            document.addEventListener('mousemove', resetIdleTimer, { passive: true });
-            document.addEventListener('click', resetIdleTimer);
-            document.addEventListener('keypress', resetIdleTimer);
-        }
-        function triggerIdleShake() {
-             const elementsToShake = [
-                 document.querySelector('h1'),
-                 textArea,
-                 hintButton,
-                 assistButton
-             ].filter(el => el != null); // Filter out nulls if elements don't exist
-
-            elementsToShake.forEach(el => {
-                el.classList.add('idle-shake');
-                 // Remove class after animation finishes (match CSS duration)
-                 setTimeout(() => el.classList.remove('idle-shake'), 1000); // 0.5s * 2 iterations
-            });
-            // Restart the timer AFTER the shake finishes
-            idleTimer = setTimeout(triggerIdleShake, IDLE_TIMEOUT);
-        }
-        function removeIdleShake() {
-             document.querySelectorAll('.idle-shake').forEach(el => el.classList.remove('idle-shake'));
-        }
-
-
-        // --- Game Flow ---
         function startGame() {
             hideOverlay();
-            currentLevelIndex = 0;
-            score = 0; // Reset stars for a new game
-            // totalWordsFoundOverall is loaded in loadProgress
+            currentRound = 1;
+            currentSegmentIndexInRound = 0;
+            score = 0; // Reset stars for a new game session
+            // totalWordsFoundOverall and totalStarsEverEarned persist across sessions via loadProgress
+            currentSentenceOffsetInMaster = 0; // Reset text pointer for new game
             updateScoreDisplay();
-             if (generatedLevels.length === 0) generateAllLevels(); // Ensure levels exist
-            loadLevel(currentLevelIndex);
-             resetIdleTimer();
+            prepareRoundData(currentRound);
+            if (generatedRoundSegmentsData.length > 0) {
+                loadSegment(currentSegmentIndexInRound);
+            } else {
+                console.error("No segments generated for round 1. Check sentence splitting or generation logic.");
+                showOverlay("Error", "Could not start game. No test available.", "OK", () => location.reload() );
+            }
+            resetIdleTimer();
         }
 
-        function retryCurrentLevel() {
+        function retryCurrentSegment() {
              hideOverlay();
-             // Don't reset score, just reload the current level state
-             loadLevel(currentLevelIndex);
+             // Score is not reset, just reload current segment state
+             loadSegment(currentSegmentIndexInRound); // Reloads same segment
              resetIdleTimer();
         }
 
-
-        function loadLevel(levelIndex) {
-            if (levelIndex >= generatedLevels.length) {
-                gameOver();
+        function loadSegment(segmentIndex) {
+            if (!generatedRoundSegmentsData || segmentIndex >= generatedRoundSegmentsData.length) {
+                // This case should ideally be handled by round completion logic
+                console.error("Attempted to load invalid segment index or no segments available.");
+                segmentFailed("Error loading test."); // Or a more graceful game over.
                 return;
             }
 
-            currentLevelData = generatedLevels[levelIndex];
+            currentSegmentData = generatedRoundSegmentsData[segmentIndex];
             mistakesFound = [];
             secondsElapsed = 0;
             misclicksMade = 0;
-            timeRemaining = currentLevelData.timeLimit;
-            maxMisclicksAllowed = currentLevelData.maxMisclicks;
+            timeRemaining = currentSegmentData.timeLimit;
+            maxMisclicksAllowed = currentSegmentData.maxMisclicks;
             hintActive = false;
 
-            // Update Displays
-            updateLevelDisplay(currentLevelData.level);
+            updateRoundAndSegmentDisplay(currentSegmentData.round, currentSegmentData.segment, generatedRoundSegmentsData.length);
             updateTimerDisplay();
             updateMisclickDisplay();
-            updateWordsLeftDisplay(currentLevelData.wrongWords.length);
+            updateWordsLeftDisplay(currentSegmentData.wrongWords.length);
             updateScoreDisplay();
-            updateBestTimeDisplayForLevel(currentLevelData.level);
+            updateBestTimeDisplayForSegment(currentSegmentData.round, currentSegmentData.segment);
 
-            // Prepare Text Area (using the generated text)
-            textArea.innerHTML = ''; // Clear previous text
-             const parts = currentLevelData.text.split(/([ .,!?;:\n]+)/); // Split keeping separators
-             parts.forEach(part => {
+            textArea.innerHTML = '';
+            const parts = currentSegmentData.text.split(/([ .,!?;:\n]+)/);
+            parts.forEach(part => {
                  if (!part) return;
                  const trimmedPart = part.trim();
-                 // Check if it's a potential word (not just separator/whitespace) and not empty
                  if (trimmedPart.length > 0 && !/^[ .,!?;:\n]+$/.test(part)) {
                      const wordSpan = document.createElement('span');
-                     wordSpan.textContent = part; // Keep original spacing/punctuation
+                     wordSpan.textContent = part;
                      wordSpan.classList.add('word');
-                     // Store the potential "misspelled" word for matching
-                     // Clean it slightly (remove trailing punctuation) but keep case for display
                      wordSpan.dataset.wordValue = part.replace(/[.,!?;:]$/, '').trim();
                      wordSpan.addEventListener('click', handleWordClick);
                      textArea.appendChild(wordSpan);
                  } else {
-                     // Add separators/whitespace back
                      textArea.appendChild(document.createTextNode(part));
                  }
              });
+            textArea.scrollTop = 0; // Scroll to top for new text
 
-            // Reset and Start Timer
             clearInterval(timerInterval);
             timerInterval = setInterval(tick, 1000);
 
-            // Reset Buttons
-            hideOverlayNextLevel();
+            hideProgressOverlay();
             hintButton.disabled = false;
             assistButton.disabled = false;
-             buyTimeButton.disabled = false;
-             buyMisclickButton.disabled = false;
-             hintButton.textContent = `Hint (${currentLevelData.hintCost}${starIconSpan})`;
-             assistButton.textContent = `Assist (${currentLevelData.assistCost}${starIconSpan})`;
-             buyTimeButton.textContent = `+Time (${BUY_TIME_COST}${starIconSpan})`;
-             buyMisclickButton.textContent = `+Misclick (${BUY_MISCLICK_COST}${starIconSpan})`;
-            updateButtonStates();
+            buyTimeButton.disabled = false;
+            buyMisclickButton.disabled = false;
+            updateButtonStates(); // This will set texts and check affordability
             clearFeedback();
+            resetIdleTimer();
+        }
+
+        function tick() {
+             secondsElapsed++; timeRemaining--; updateTimerDisplay();
+             if (timeRemaining <= 0) segmentFailed("Time's up!");
              resetIdleTimer();
         }
 
-         function tick() {
-             secondsElapsed++;
-             timeRemaining--;
-             updateTimerDisplay();
-
-             if (timeRemaining <= 0) {
-                 levelFailed("Time's up!");
-             }
-             resetIdleTimer(); // Reset idle on tick
-         }
-
-
         function handleWordClick(event) {
-            resetIdleTimer(); // Interaction happened
+            resetIdleTimer();
             const clickedSpan = event.target;
-            if (!clickedSpan.classList.contains('word') || clickedSpan.classList.contains('correctly-identified') || clickedSpan.classList.contains('incorrectly-clicked')) {
-                return;
-            }
+            if (!clickedSpan.classList.contains('word') || clickedSpan.classList.contains('correctly-identified') || clickedSpan.classList.contains('incorrectly-clicked')) return;
 
-            // Use the stored word value for matching
             const clickedWordValue = clickedSpan.dataset.wordValue;
-            const isWrong = currentLevelData.wrongWords.includes(clickedWordValue);
-
+            const isWrong = currentSegmentData.wrongWords.includes(clickedWordValue);
             clearFeedback();
 
             if (isWrong && !mistakesFound.includes(clickedWordValue)) {
                 playSound('correct');
                 mistakesFound.push(clickedWordValue);
-                totalWordsFoundOverall++; // Increment overall count
+                totalWordsFoundOverall++;
                 clickedSpan.classList.add('correctly-identified');
-                const newSpan = document.createElement("span"); // create new <span>
-                newSpan.textContent = currentLevelData.originalWords[currentLevelData.wrongWords.indexOf(clickedWordValue)] // correct word
-                newSpan.style.background = "bisque";
-                clickedSpan.after(newSpan);
-                score += currentLevelData.starsPerWord;
-                updateScoreDisplay(); // Calls updateButtonStates
-                updateWordsLeftDisplay(currentLevelData.wrongWords.length - mistakesFound.length);
-                showFeedback(`Correct! +${currentLevelData.starsPerWord}${starIconSpan}`, 'success');
+                
+                const correctedWord = currentSegmentData.originalWordsMap[clickedWordValue];
+                if (correctedWord) {
+                    const correctedSpan = document.createElement('span');
+                    correctedSpan.textContent = ` (${correctedWord})`;
+                    correctedSpan.classList.add('corrected-span');
+                    clickedSpan.parentNode.insertBefore(correctedSpan, clickedSpan.nextSibling);
+                }
 
-                checkAchievements(-1, -1, -1, 'first_word'); // Simplified check for word find achievements
-                checkAchievements(-1, -1, -1, 'total_words'); // Let condition functions check totalWordsFoundOverall
+                score += currentSegmentData.starsPerWord;
+                totalStarsEverEarned += currentSegmentData.starsPerWord; // Track for achievements
+                updateScoreDisplay();
+                updateWordsLeftDisplay(currentSegmentData.wrongWords.length - mistakesFound.length);
+                showFeedback(`Correct! +${currentSegmentData.starsPerWord}${starIconSpan}`, 'success');
 
-                if (mistakesFound.length === currentLevelData.wrongWords.length) {
-                    levelComplete();
+                const achContext = { round: currentRound, score: score, totalWords: totalWordsFoundOverall, misclicks: misclicksMade, time: secondsElapsed, action: 'word_found', highestRound: highestRoundReached, totalStarsEver: totalStarsEverEarned };
+                checkAchievements(achContext);
+
+
+                if (mistakesFound.length === currentSegmentData.wrongWords.length) {
+                    segmentComplete();
                 }
             } else if (isWrong && mistakesFound.includes(clickedWordValue)) {
-                 playSound('incorrect');
-                 showFeedback("You already found that one!", 'info');
-            } else { // Clicked a correct word (MISCLICK)
-                 playSound('incorrect');
-                 clickedSpan.classList.add('incorrectly-clicked');
-                 misclicksMade++;
-                 updateMisclickDisplay();
-                 showFeedback("Oops! That word is correct.", 'error');
-                 updateButtonStates(); // Update buttons as misclicks change allowance
-
-                 if (misclicksMade >= maxMisclicksAllowed) {
-                     setTimeout(() => levelFailed("Too many misclicks!"), 300); // Delay slightly after feedback
-                 } else {
-                     setTimeout(() => {
-                         if (clickedSpan) clickedSpan.classList.remove('incorrectly-clicked');
-                     }, 500);
-                 }
+                playSound('incorrect');
+                showFeedback("You already found that one!", 'info');
+            } else {
+                playSound('incorrect');
+                clickedSpan.classList.add('incorrectly-clicked');
+                misclicksMade++;
+                updateMisclickDisplay();
+                showFeedback("Oops! That word is correct.", 'error');
+                updateButtonStates();
+                if (misclicksMade >= maxMisclicksAllowed) {
+                    setTimeout(() => segmentFailed("Too many misclicks!"), 300);
+                } else {
+                    setTimeout(() => { if (clickedSpan) clickedSpan.classList.remove('incorrectly-clicked'); }, 500);
+                }
             }
         }
 
-         function levelFailed(reason) {
-             playSound('fail');
-             clearInterval(timerInterval);
+        function segmentFailed(reason) {
+             playSound('fail'); clearInterval(timerInterval);
              showFeedback(reason, 'fail', 4000);
-            //  textArea.style.opacity = 0.5; // Dim text area
              disableAllGameButtons();
+             textArea.classList.add('disabled'); // Visually disable text area
 
-             // Offer Retry option
              setTimeout(() => {
-                 showOverlay("Level Failed!", reason + " Try again?", "Start Over", startGame, true, retryCurrentLevel);
-             }, 500);
-         }
+                 showOverlay("Segment Failed!", reason + " Try again or start over?", "Start Over (New Game)", startGame, true, retryCurrentSegment);
+             }, 1500);
+        }
 
-        function levelComplete() {
-             playSound('levelUp');
-            clearInterval(timerInterval);
-            disableAllGameButtons();
+        function segmentComplete() {
+            playSound('levelUp'); clearInterval(timerInterval);
+            disableAllGameButtons(); // Disable interactables
 
-            // Check for Best Time (using level number)
-            const levelKey = `level_${currentLevelData.level}`;
-            const previousBestTime = gameProgress[levelKey]?.time;
+            const segmentKey = `r${currentSegmentData.round}_s${currentSegmentData.segment}`;
+            const previousBestTime = gameProgress.segmentBestTimes ? gameProgress.segmentBestTimes[segmentKey] : undefined;
             let newBestTime = false;
             if (previousBestTime === undefined || secondsElapsed < previousBestTime) {
-                 if (!gameProgress[levelKey]) gameProgress[levelKey] = {};
-                 gameProgress[levelKey].time = secondsElapsed;
+                 if (!gameProgress.segmentBestTimes) gameProgress.segmentBestTimes = {};
+                 gameProgress.segmentBestTimes[segmentKey] = secondsElapsed;
                  newBestTime = true;
-                 updateBestTimeDisplayForLevel(currentLevelData.level);
+                 updateBestTimeDisplayForSegment(currentSegmentData.round, currentSegmentData.segment);
             }
 
-            let completeMessage = `Level ${currentLevelData.level} Complete! Time: ${formatTime(secondsElapsed)}`;
-             let feedbackType = 'success';
-            if (newBestTime) {
-                 completeMessage += " (New Best Time!) ✨";
-                 feedbackType = 'record';
-             }
-             showFeedback(completeMessage, feedbackType, 500);
+            let completeMessage = `Segment ${currentSegmentData.segment} of ${generatedRoundSegmentsData.length} Complete! Time: ${formatTime(secondsElapsed)}`;
+            let feedbackType = 'success';
+            if (newBestTime) { completeMessage += " (New Best Time!) ✨"; feedbackType = 'record'; }
+            showFeedback(completeMessage, feedbackType, 2000);
 
-            // Check achievements for level completion, speed, no misclicks etc.
-            checkAchievements(currentLevelIndex, secondsElapsed, misclicksMade);
+            const achContextBase = { round: currentRound, score: score, totalWords: totalWordsFoundOverall, misclicks: misclicksMade, time: secondsElapsed, highestRound: highestRoundReached, totalStarsEver: totalStarsEverEarned };
+            checkAchievements({ ...achContextBase, action: 'segment_complete' });
 
-            saveProgress(); // Save after completing level
+            if (score > highScore) highScore = score; // Update high score if current game score is higher
+            if (currentRound > highestRoundReached) highestRoundReached = currentRound; // Update highest round reached
 
-            // Reveal Next/Finish button
+            saveProgress();
+
+            const nextSegmentButton = document.getElementById('next-segment-button');
+
             setTimeout(() => {
-                 clearFeedback();
-                 textArea.style.opacity = 1; // Restore opacity
-                 if (currentLevelIndex < generatedLevels.length - 1) {
-                    showOverlayNextLevel();
-                    nextLevelButton.textContent = 'Next Level!';
-                    nextLevelButton.onclick = () => {
+                clearFeedback();
+
+                if (currentSegmentIndexInRound < generatedRoundSegmentsData.length - 1) {
+                    showProgressOverlay(`Test ${currentSegmentData.segment} in round ${currentRound} is done!`);
+                    nextSegmentButton.textContent = 'Next Test';
+                    nextSegmentButton.onclick = () => { // This replaces any previous .onclick
                         playSound('click');
-                        currentLevelIndex++;
-                        loadLevel(currentLevelIndex);
+                        currentSegmentIndexInRound++;
+                        loadSegment(currentSegmentIndexInRound);
                     };
-                } else {
-                    //  nextLevelButton.style.display = 'inline-block';
-                    showOverlayNextLevel();
-                    nextLevelButton.textContent = 'Finish Game!';
-                    // textArea.classList.remove('disabled');
-                    nextLevelButton.onclick = () => {
-                       playSound('click');
-                       gameOver();
+                } else { // Round complete
+                    playSound('roundUp');
+                    if (!gameProgress.usedHintOrAssistThisRound) {
+                        checkAchievements({ ...achContextBase, action: 'round_complete_pure' });
+                    }
+
+                    showProgressOverlay(`Round ${currentRound} complete!`);
+                    nextSegmentButton.textContent = 'Start Next Round!';
+                    nextSegmentButton.onclick = () => { // This replaces any previous .onclick
+                        playSound('click');
+                        currentRound++;
+                        currentSegmentIndexInRound = 0;
+                        prepareRoundData(currentRound);
+                        if (generatedRoundSegmentsData.length > 0) {
+                            loadSegment(0);
+                        } else {
+                            gameOver("All available text exhausted or error in generation.");
+                        }
+                        if (currentRound > highestRoundReached) highestRoundReached = currentRound;
+                        saveProgress();
                     };
                 }
-                //  nextLevelButton.disabled = false; // Ensure it's enabled
-            }, 100);
+            }, 1000);
+
         }
 
-        function gameOver() {
-            playSound('levelUp'); // Fanfare
-            clearInterval(timerInterval);
-            textArea.innerHTML = 'Congratulations!';
-             disableAllGameButtons();
+        function gameOver(reason = "You decided to finish.") { // Can be called if user quits or runs out of content (unlikely with looping)
+            playSound('levelUp'); clearInterval(timerInterval);
+            disableAllGameButtons();
 
-            // Check High Score
-            let finalMessage = `You finished all levels! Final Score: ${starIconSpan} ${score}`;
-            let feedbackType = 'success';
-            if (score > highScore) {
-                 finalMessage += " (New High Score! 🎉)";
-                 highScore = score;
-                 feedbackType = 'record';
-             }
-             showFeedback("Game Finished!", feedbackType, 3000);
-
-            // Check achievement for completing all levels
-            checkAchievements(currentLevelIndex); // Index implies all done
-
-            saveProgress(); // Save final score
+            let finalMessage = `Game Over! ${reason} Final Score: ${starIconSpan} ${score}. You reached Round ${currentRound}.`;
+            if (score > highScore) { finalMessage += " (New High Score! 🎉)"; highScore = score; }
+            if (currentRound > highestRoundReached) { highestRoundReached = currentRound; } // Should be updated earlier too
+            showFeedback("Game Finished!", score > highScore ? 'record' : 'success', 4000);
+            saveProgress();
 
             setTimeout(() => {
-                 showOverlay("Game Over!", finalMessage, "Play Again?", startGame, false);
+                 showOverlay("Game Over!", `<p class="centered-text">${finalMessage}</p>`, "Play Again?", startGame, false);
             }, 1500);
         }
 
-
-        // --- Helper Functions ---
-         function disableAllGameButtons() {
-            hintButton.disabled = true;
-            assistButton.disabled = true;
-            buyTimeButton.disabled = true;
-            buyMisclickButton.disabled = true;
-            // nextLevelButton.disabled = true; // Disable if shown
-         }
-
-        function updateScoreDisplay() {
-            scoreDisplay.innerHTML = `${starIconSpan} Stars: <strong>${score}</strong>`;
-             updateButtonStates(); // Crucial: check buttons whenever score changes
-        }
-        function updateLevelDisplay(level) { levelDisplay.innerHTML = `Level: <strong>${level}</strong>`; }
-        function updateWordsLeftDisplay(count) { wordsLeftDisplay.innerHTML = `Errors To Find: <strong>${count}</strong>`; }
-        function formatTime(totalSeconds) { const minutes = Math.floor(totalSeconds / 60); const seconds = totalSeconds % 60; return `${minutes}:${seconds.toString().padStart(2, '0')}`; }
-        function updateBestTimeDisplay(timeStr) { bestTimeDisplay.innerHTML = `Best: <strong>${timeStr}</strong>`; }
-        function updateBestTimeDisplayForLevel(levelNum) {
-            const levelKey = `level_${levelNum}`;
-            const bestTime = gameProgress[levelKey]?.time;
-            updateBestTimeDisplay(bestTime !== undefined ? formatTime(bestTime) : "--:--");
+        function disableAllGameButtons() { hintButton.disabled=true; assistButton.disabled=true; buyTimeButton.disabled=true; buyMisclickButton.disabled=true; }
+        function updateScoreDisplay() { scoreDisplay.innerHTML = `${starIconSpan} Stars: <strong>${score}</strong>`; updateButtonStates(); }
+        function updateRoundAndSegmentDisplay(round, segment, totalSegments) { roundDisplay.innerHTML = `Round: <strong>${round}</strong>`; segmentDisplay.innerHTML = `Test: <strong>${segment} / ${totalSegments}</strong>`; }
+        function updateWordsLeftDisplay(count) { wordsLeftDisplay.innerHTML = `Errors Left: <strong>${count}</strong>`; }
+        function formatTime(totalSeconds) { const m=Math.floor(totalSeconds/60); const s=totalSeconds%60; return `${m}:${s.toString().padStart(2,'0')}`; }
+        function updateBestTimeDisplayForSegment(round, segment) {
+            const segmentKey = `r${round}_s${segment}`;
+            const bestTime = gameProgress.segmentBestTimes ? gameProgress.segmentBestTimes[segmentKey] : undefined;
+            bestTimeDisplay.innerHTML = `Segment Best: <strong>${bestTime !== undefined ? formatTime(bestTime) : "--:--"}</strong>`;
         }
         function updateTimerDisplay() {
             timeProgressLabel.textContent = formatTime(timeRemaining);
-            const timePercentage = Math.max(0, (timeRemaining / currentLevelData.timeLimit) * 100);
-            timeProgress.style.width = `${timePercentage}%`;
-            // Change color if time is low
-             if (timePercentage < 25) timeProgress.style.background = 'linear-gradient(to right, #ff4d4d, #ff8080)';
-             else timeProgress.style.background = 'linear-gradient(to right, #4682b4, #81a2bd)';
-
+            const timePerc = currentSegmentData ? Math.max(0,(timeRemaining/currentSegmentData.timeLimit)*100) : 100;
+            timeProgress.style.width = `${timePerc}%`;
+            timeProgress.style.background = timePerc < 25 ? 'linear-gradient(to right, #ff4d4d, #ff8080)' : 'linear-gradient(to right, #4682b4, #81a2bd)';
         }
         function updateMisclickDisplay() {
             misclickProgressLabel.textContent = `${maxMisclicksAllowed - misclicksMade} left`;
-            const misclickPercentage = Math.max(0, ((maxMisclicksAllowed - misclicksMade) / currentLevelData.maxMisclicks) * 100); // Use initial max for percentage base
-            misclickProgress.style.width = `${misclickPercentage}%`;
-             // Change color if low
-             if (misclickPercentage < 25 && currentLevelData.maxMisclicks > 1) misclickProgress.style.background = 'linear-gradient(to right, #ff4d4d, #ff8080)';
-             else misclickProgress.style.background = 'linear-gradient(to right,#ff8c00, #fdc785)';
+            const misclickPerc = currentSegmentData ? Math.max(0, ((maxMisclicksAllowed-misclicksMade)/currentSegmentData.maxMisclicks)*100) : 100;
+            misclickProgress.style.width = `${misclickPerc}%`;
+            misclickProgress.style.background = misclickPerc < 34 && currentSegmentData && currentSegmentData.maxMisclicks > 1 ? 'linear-gradient(to right, #ff4d4d, #ff8080)' : 'linear-gradient(to right,#ff8c00, #fdc785)';
         }
-        function showFeedback(message, type = 'info', duration = 2000) {
-            feedback.textContent = message;
-            feedback.className = `show ${type}`; // Reset classes and add new ones
-            if (feedback.timer) clearTimeout(feedback.timer);
-            feedback.timer = setTimeout(clearFeedback, duration);
+        function showFeedback(message, type='info', duration=2000) { feedback.textContent=message;
+            feedback.className=`show ${type}`;
+            if(feedback.timer) clearTimeout(feedback.timer);
+            feedback.timer=setTimeout(clearFeedback,duration);
         }
-        function clearFeedback() { if (feedback.timer) clearTimeout(feedback.timer); feedback.classList.remove('show', 'success', 'error', 'info', 'record', 'fail'); }
-         function updateButtonStates() {
-            if (!currentLevelData || mistakesFound.length === currentLevelData.wrongWords.length || timeRemaining <= 0 || misclicksMade >= maxMisclicksAllowed) {
-                 // Disable all if level inactive/over
-                 disableAllGameButtons();
-                 return;
+        function clearFeedback() {
+            if(feedback.timer) clearTimeout(feedback.timer);
+            feedback.classList.remove('show','success','error','info','record','fail');
+        }
+
+        function updateButtonStates() {
+            if (!currentSegmentData || mistakesFound.length === currentSegmentData.wrongWords.length || timeRemaining <= 0 || misclicksMade >= maxMisclicksAllowed) {
+                disableAllGameButtons();
+                return;
             }
-            const canAffordHint = score >= currentLevelData.hintCost;
-            const canAffordAssist = score >= currentLevelData.assistCost;
-            const canAffordTime = score >= BUY_TIME_COST;
-            const canAffordMisclick = score >= BUY_MISCLICK_COST;
-            const wordsRemaining = mistakesFound.length < currentLevelData.wrongWords.length;
+            const canAffordHint = score >= currentSegmentData.hintCost;
+            const canAffordAssist = score >= currentSegmentData.assistCost;
+            const currentBuyTimeCost = Math.max(10, BASE_BUY_TIME_COST + Math.floor(currentRound * 2.5)); // Dynamic cost
+            const currentBuyMisclickCost = Math.max(15, BASE_BUY_MISCLICK_COST + Math.floor(currentRound * 3.5));
+            const canAffordTime = score >= currentBuyTimeCost;
+            const canAffordMisclick = score >= currentBuyMisclickCost;
+            const wordsRemaining = mistakesFound.length < currentSegmentData.wrongWords.length;
 
             hintButton.disabled = (!canAffordHint || hintActive || !wordsRemaining);
             assistButton.disabled = (!canAffordAssist || !wordsRemaining);
             buyTimeButton.disabled = (!canAffordTime);
             buyMisclickButton.disabled = (!canAffordMisclick);
-         }
 
+            hintButton.textContent = `Hint (${currentSegmentData.hintCost}${starIconSpan})`;
+            assistButton.textContent = `Assist (${currentSegmentData.assistCost}${starIconSpan})`;
+            buyTimeButton.textContent = `+Time (${currentBuyTimeCost}${starIconSpan})`;
+            buyMisclickButton.textContent = `+Misclick (${currentBuyMisclickCost}${starIconSpan})`;
+        }
 
-        // --- Hints, Assists, Buy Actions ---
         function useHint() {
-            if (hintButton.disabled) return; // Check disabled state directly
+            if (hintButton.disabled) return;
             resetIdleTimer();
             playSound('hint');
-            score -= currentLevelData.hintCost;
-            updateScoreDisplay(); // Updates buttons too
-            showFeedback(`Hint used! (-${currentLevelData.hintCost}${starIconSpan})`, 'info');
+            score -= currentSegmentData.hintCost;
+            gameProgress.usedHintOrAssistThisRound = true;
+            updateScoreDisplay();
+            showFeedback(`Hint used! (-${currentSegmentData.hintCost}${starIconSpan})`, 'info');
             hintActive = true;
-            hintButton.disabled = true; // Disable immediately
+            hintButton.disabled = true;
 
             let hintedWordSpan = null;
             const wordSpans = textArea.querySelectorAll('.word');
-            const remainingWrongWords = currentLevelData.wrongWords.filter(w => !mistakesFound.includes(w));
-
+            const remainingWrongWords = currentSegmentData.wrongWords.filter(w => !mistakesFound.includes(w));
             if (remainingWrongWords.length > 0) {
-                const wordToHint = remainingWrongWords[0];
-                 for (const span of wordSpans) {
-                    if (span.dataset.wordValue === wordToHint && !span.classList.contains('correctly-identified')) {
-                        hintedWordSpan = span; break;
-                    }
-                }
+                const wordToHint = getRandomElement(remainingWrongWords); // Hint a random remaining word
+                 for (const span of wordSpans) { if (span.dataset.wordValue === wordToHint && !span.classList.contains('correctly-identified')) { hintedWordSpan = span; break; } }
             }
-
-            if (hintedWordSpan) {
-                hintedWordSpan.classList.add('hinted');
-                setTimeout(() => {
-                     if (hintedWordSpan) hintedWordSpan.classList.remove('hinted');
-                    hintActive = false;
-                    updateButtonStates(); // Re-check hint button possibility
-                }, 2500);
-            } else {
-                hintActive = false; updateButtonStates(); // Failsafe
-            }
+            if (hintedWordSpan) { hintedWordSpan.classList.add('hinted'); setTimeout(() => { if (hintedWordSpan) hintedWordSpan.classList.remove('hinted'); hintActive = false; updateButtonStates(); }, 2500); }
+            else { hintActive = false; updateButtonStates(); }
         }
         function useAssist() {
-            if (assistButton.disabled) return;
-             resetIdleTimer();
-             playSound('assist');
-            score -= currentLevelData.assistCost;
-            updateScoreDisplay(); // Updates buttons too
-            showFeedback(`Assist used! (-${currentLevelData.assistCost}${starIconSpan})`, 'info');
+            if (assistButton.disabled) return; resetIdleTimer(); playSound('assist');
+            score -= currentSegmentData.assistCost; gameProgress.usedHintOrAssistThisRound = true;
+            updateScoreDisplay(); showFeedback(`Assist used! (-${currentSegmentData.assistCost}${starIconSpan})`, 'info');
 
-            let wordToAssist = null;
-            let assistedSpan = null;
-            const remainingWrongWords = currentLevelData.wrongWords.filter(w => !mistakesFound.includes(w));
-
+            let wordToAssist = null, assistedSpan = null;
+            const remainingWrongWords = currentSegmentData.wrongWords.filter(w => !mistakesFound.includes(w));
             if (remainingWrongWords.length > 0) {
-                wordToAssist = remainingWrongWords[0];
+                wordToAssist = remainingWrongWords[0]; // Assist the first one usually
                 const wordSpans = textArea.querySelectorAll('.word');
-                for (const span of wordSpans) {
-                    if (span.dataset.wordValue === wordToAssist && !span.classList.contains('correctly-identified')) {
-                        assistedSpan = span; break;
-                    }
-                }
+                for (const span of wordSpans) { if (span.dataset.wordValue === wordToAssist && !span.classList.contains('correctly-identified')) { assistedSpan = span; break; } }
             }
-
             if (assistedSpan && wordToAssist) {
-                mistakesFound.push(wordToAssist); // Mark as found
+                mistakesFound.push(wordToAssist);
                 assistedSpan.classList.add('correctly-identified');
-                updateWordsLeftDisplay(currentLevelData.wrongWords.length - mistakesFound.length);
-                 // DO NOT give stars for assisted words
-                 // DO NOT increment totalWordsFoundOverall for assist
-
-                 if (mistakesFound.length === currentLevelData.wrongWords.length) {
-                     levelComplete();
-                 } else {
-                     updateButtonStates(); // Re-check buttons state
-                 }
-            } else {
-                 score += currentLevelData.assistCost; // Refund if assist failed unexpectedly
-                 updateScoreDisplay();
-                 showFeedback("Couldn't use assist!", 'error');
-                 updateButtonStates();
-            }
+                 const correctedWord = currentSegmentData.originalWordsMap[wordToAssist];
+                 if (correctedWord) { const cs=document.createElement('span'); cs.textContent=` (${correctedWord})`; cs.classList.add('corrected-span'); assistedSpan.parentNode.insertBefore(cs, assistedSpan.nextSibling); }
+                updateWordsLeftDisplay(currentSegmentData.wrongWords.length - mistakesFound.length);
+                // No stars for assisted, no totalWordsFoundOverall increment.
+                if (mistakesFound.length === currentSegmentData.wrongWords.length) segmentComplete();
+                else updateButtonStates();
+            } else { score += currentSegmentData.assistCost; updateScoreDisplay(); showFeedback("Couldn't use assist!", 'error'); updateButtonStates(); }
         }
         function buyTime() {
-            if (buyTimeButton.disabled) return;
-             resetIdleTimer();
-             playSound('buy');
-             score -= BUY_TIME_COST;
-             timeRemaining += BUY_TIME_AMOUNT;
-             // Update time limit in current level data? No, just add to remaining.
-             updateScoreDisplay(); // Deducts stars, updates buttons
-             updateTimerDisplay(); // Show increased time
-             showFeedback(`Time added! (+${BUY_TIME_AMOUNT}s)`, 'success');
-             checkAchievements(-1, -1, -1, 'buy'); // Check buy achievement
-         }
-         function buyMisclick() {
-             if (buyMisclickButton.disabled) return;
-             resetIdleTimer();
-             playSound('buy');
-             score -= BUY_MISCLICK_COST;
-             maxMisclicksAllowed += BUY_MISCLICK_AMOUNT; // Increase the limit
-             // Should we reset misclicksMade? No, just increase the ceiling.
-             updateScoreDisplay(); // Deducts stars, updates buttons
-             updateMisclickDisplay(); // Show new allowance
-             showFeedback(`Misclick added! (+${BUY_MISCLICK_AMOUNT} allowed)`, 'success');
-             checkAchievements(-1, -1, -1, 'buy'); // Check buy achievement
-         }
+            const currentBuyTimeCost = Math.max(10, BASE_BUY_TIME_COST + Math.floor(currentRound * 2.5));
+            if (buyTimeButton.disabled || score < currentBuyTimeCost) return;
+            resetIdleTimer(); playSound('buy'); score -= currentBuyTimeCost; timeRemaining += BUY_TIME_AMOUNT;
+            updateScoreDisplay(); updateTimerDisplay(); showFeedback(`Time added! (+${BUY_TIME_AMOUNT}s)`, 'success');
+            checkAchievements({ action: 'buy', round: currentRound, score: score, totalWords: totalWordsFoundOverall, highestRound: highestRoundReached, totalStarsEver: totalStarsEverEarned });
+        }
+        function buyMisclick() {
+            const currentBuyMisclickCost = Math.max(15, BASE_BUY_MISCLICK_COST + Math.floor(currentRound * 3.5));
+            if (buyMisclickButton.disabled || score < currentBuyMisclickCost) return;
+            resetIdleTimer(); playSound('buy'); score -= currentBuyMisclickCost; maxMisclicksAllowed += BUY_MISCLICK_AMOUNT;
+            updateScoreDisplay(); updateMisclickDisplay(); showFeedback(`Misclick added! (+${BUY_MISCLICK_AMOUNT} allowed)`, 'success');
+            checkAchievements({ action: 'buy', round: currentRound, score: score, totalWords: totalWordsFoundOverall, highestRound: highestRoundReached, totalStarsEver: totalStarsEverEarned });
+        }
 
-
-        // --- Event Listeners ---
+        // Event Listeners
         hintButton.addEventListener('click', useHint);
         assistButton.addEventListener('click', useAssist);
         buyTimeButton.addEventListener('click', buyTime);
         buyMisclickButton.addEventListener('click', buyMisclick);
-        // nextLevelButton listener set dynamically
-        // Overlay buttons listeners set in showOverlay
+        // nextSegmentButton listener attached dynamically in segmentComplete
 
-        // --- Initial Setup ---
         document.addEventListener('DOMContentLoaded', initGame);
-
     </script>
-
 </body>
 </html>
