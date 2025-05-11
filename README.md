@@ -64,9 +64,9 @@ Get ready to click, type, and play! Here are the games currently live in our col
 [![Spell Game Screenshot/GIF](placeholder_link_to_spell_game_image_or_gif.gif)](./2048_game/)
 *Click image or link above to see the code!*
 
-**➡️ [Play Spell Master Challenge LIVE!](https://mariasstory.github.io/htmlGames/2048_game/index.html) ⬅️** V1
+**➡️ [Play 2048 game LIVE!](https://mariasstory.github.io/htmlGames/2048_game/index.html) ⬅️** V1
 
-**➡️ [Play Spell Master Challenge LIVE!](https://mariasstory.github.io/htmlGames/2048_game/2048_game.html) ⬅️** V2
+**➡️ [Play 2048 game LIVE!](https://mariasstory.github.io/htmlGames/2048_game/2048_game.html) ⬅️** V2
 
 ---
 
