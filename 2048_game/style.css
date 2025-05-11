@@ -1,0 +1,246 @@
+:root {
+    --board-bg: #bbada0;
+    --cell-bg: #cdc1b4;
+    --text-dark: #776e65;
+    --text-light: #f9f6f2;
+    --game-bg: #faf8ef;
+    --font-family: 'Arial', sans-serif; /* Choose a modern font */
+    --border-radius: 6px;
+    --tile-size: 20vw; /* Mobile first tile size */
+    --tile-gap: 3vw;   /* Mobile first gap */
+}
+
+@media (min-width: 500px) {
+    :root {
+        --tile-size: 100px;
+        --tile-gap: 15px;
+    }
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--game-bg);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top for scrolling if needed */
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation; /* Prevents double tap zoom */
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px; /* Max width of the game area */
+    width: 100%;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem); /* Responsive font size */
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.stat-box {
+    background-color: var(--board-bg);
+    color: var(--text-light);
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+    font-size: clamp(0.8rem, 3vw, 1.1rem);
+    min-width: 70px;
+    text-align: center;
+}
+
+.stat-box .label {
+    display: block;
+    font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+    color: #eee4da;
+}
+
+.level-stars-container {
+    margin-bottom: 15px;
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stars-display {
+    margin-left: 10px;
+    color: #f5b538; /* Star color */
+}
+
+.stars-display .fa-star {
+    margin: 0 2px;
+    transition: transform 0.3s ease-out;
+}
+
+.stars-display .fa-star.earned {
+    transform: scale(1.2);
+}
+
+.btn {
+    background-color: var(--text-dark);
+    color: var(--text-light);
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #9f8f7f;
+}
+.btn:active {
+    transform: scale(0.95);
+}
+
+
+.game-board-container {
+    position: relative;
+    background-color: var(--board-bg);
+    border-radius: var(--border-radius);
+    padding: var(--tile-gap);
+    /* Calculate total board size based on tiles and gaps */
+    width: calc(4 * var(--tile-size) + 5 * var(--tile-gap));
+    height: calc(4 * var(--tile-size) + 5 * var(--tile-gap));
+    box-sizing: border-box;
+}
+
+.grid-background {
+    display: grid;
+    grid-template-columns: repeat(4, var(--tile-size));
+    grid-template-rows: repeat(4, var(--tile-size));
+    gap: var(--tile-gap);
+}
+
+.grid-cell {
+    background-color: var(--cell-bg);
+    border-radius: var(--border-radius);
+    width: var(--tile-size);
+    height: var(--tile-size);
+}
+
+.tile-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* z-index: 1; Tiles appear above background grid cells but below overlay */
+}
+
+.tile {
+    position: absolute;
+    width: var(--tile-size);
+    height: var(--tile-size);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: clamp(1.2rem, 5vw, 2.5rem); /* Responsive font size for tiles */
+    transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+    z-index: 2;
+    color: var(--text-light); /* Default for high numbers */
+}
+
+/* Tile specific styles */
+.tile.tile-2 { background-color: #eee4da; color: var(--text-dark); }
+.tile.tile-4 { background-color: #ede0c8; color: var(--text-dark); }
+.tile.tile-8 { background-color: #f2b179; }
+.tile.tile-16 { background-color: #f59563; }
+.tile.tile-32 { background-color: #f67c5f; }
+.tile.tile-64 { background-color: #f65e3b; }
+.tile.tile-128 { background-color: #edcf72; }
+.tile.tile-256 { background-color: #edcc61; }
+.tile.tile-512 { background-color: #edc850; }
+.tile.tile-1024 { background-color: #edc53f; }
+.tile.tile-2048 { background-color: #edc22e; }
+.tile.tile-super { background-color: #3c3a32; } /* For tiles > 2048 */
+
+/* Animations */
+.tile-new {
+    animation: newTileAppear 0.2s ease-out;
+}
+@keyframes newTileAppear {
+    0% { transform: scale(0.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.tile-merged {
+    animation: mergedTilePulse 0.2s ease-in-out;
+    z-index: 3; /* Merged tile temporarily on top */
+}
+@keyframes mergedTilePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(238, 228, 218, 0.73); /* Translucent background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Above tiles */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    text-align: center;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.overlay p {
+    font-size: clamp(1.5rem, 6vw, 3rem);
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.overlay .btn {
+    margin-top: 10px;
+}
+
+footer {
+    margin-top: 30px;
+    font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+    color: #a3988f;
+    text-align: center;
+}
+
+/* Adjust tile font size for larger numbers */
+.tile.tile-128, .tile.tile-256, .tile.tile-512 { font-size: clamp(1.1rem, 4.5vw, 2.2rem); }
+.tile.tile-1024, .tile.tile-2048, .tile.tile-super { font-size: clamp(0.9rem, 4vw, 1.8rem); }

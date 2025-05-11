@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Modern 2048</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>2048</h1>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span class="label">Score</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">Best</span>
+                    <span id="best-score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">Time</span>
+                    <span id="time">00:00</span>
+                </div>
+            </div>
+            <div class="level-stars-container">
+                <span class="label">Level: <span id="level">1</span></span>
+                <div id="stars-display" class="stars-display">
+                    <!-- Stars will be injected by JS -->
+                </div>
+            </div>
+            <button id="new-game-button" class="btn">New Game</button>
+        </header>
+
+        <div class="game-board-container">
+            <div class="grid-background">
+                <!-- Background cells -->
+            </div>
+            <div class="tile-container">
+                <!-- Tiles will be injected by JS -->
+            </div>
+            <div class="game-message overlay" id="game-message-overlay">
+                <p id="game-message-text"></p>
+                <button id="try-again-button" class="btn">Try Again</button>
+                <button id="keep-playing-button" class="btn" style="display:none;">Keep Playing</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Swipe or use Arrow Keys to play.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
