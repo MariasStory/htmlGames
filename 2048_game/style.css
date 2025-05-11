@@ -4,17 +4,10 @@
     --text-dark: #776e65;
     --text-light: #f9f6f2;
     --game-bg: #faf8ef;
-    --font-family: 'Arial', sans-serif; /* Choose a modern font */
+    --font-family: "Arial", sans-serif; /* Choose a modern font */
     --border-radius: 6px;
-    --tile-size: 20vw; /* Mobile first tile size */
-    --tile-gap: 3vw;   /* Mobile first gap */
-}
-
-@media (min-width: 500px) {
-    :root {
-        --tile-size: 100px;
-        --tile-gap: 15px;
-    }
+    --tile-size: 100px;
+    --tile-gap: 15px;
 }
 
 body {
@@ -105,7 +98,9 @@ header h1 {
     border-radius: var(--border-radius);
     font-size: clamp(0.9rem, 3.5vw, 1.1rem);
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
     font-weight: bold;
 }
 
@@ -115,7 +110,6 @@ header h1 {
 .btn:active {
     transform: scale(0.95);
 }
-
 
 .game-board-container {
     position: relative;
@@ -161,32 +155,66 @@ header h1 {
     align-items: center;
     font-weight: bold;
     font-size: clamp(1.2rem, 5vw, 2.5rem); /* Responsive font size for tiles */
-    transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+    transition:
+        transform 0.15s ease-out,
+        background-color 0.15s ease-out;
     z-index: 2;
     color: var(--text-light); /* Default for high numbers */
 }
 
 /* Tile specific styles */
-.tile.tile-2 { background-color: #eee4da; color: var(--text-dark); }
-.tile.tile-4 { background-color: #ede0c8; color: var(--text-dark); }
-.tile.tile-8 { background-color: #f2b179; }
-.tile.tile-16 { background-color: #f59563; }
-.tile.tile-32 { background-color: #f67c5f; }
-.tile.tile-64 { background-color: #f65e3b; }
-.tile.tile-128 { background-color: #edcf72; }
-.tile.tile-256 { background-color: #edcc61; }
-.tile.tile-512 { background-color: #edc850; }
-.tile.tile-1024 { background-color: #edc53f; }
-.tile.tile-2048 { background-color: #edc22e; }
-.tile.tile-super { background-color: #3c3a32; } /* For tiles > 2048 */
+.tile.tile-2 {
+    background-color: #eee4da;
+    color: var(--text-dark);
+}
+.tile.tile-4 {
+    background-color: #ede0c8;
+    color: var(--text-dark);
+}
+.tile.tile-8 {
+    background-color: #f2b179;
+}
+.tile.tile-16 {
+    background-color: #f59563;
+}
+.tile.tile-32 {
+    background-color: #f67c5f;
+}
+.tile.tile-64 {
+    background-color: #f65e3b;
+}
+.tile.tile-128 {
+    background-color: #edcf72;
+}
+.tile.tile-256 {
+    background-color: #edcc61;
+}
+.tile.tile-512 {
+    background-color: #edc850;
+}
+.tile.tile-1024 {
+    background-color: #edc53f;
+}
+.tile.tile-2048 {
+    background-color: #edc22e;
+}
+.tile.tile-super {
+    background-color: #3c3a32;
+} /* For tiles > 2048 */
 
 /* Animations */
 .tile-new {
     animation: newTileAppear 0.2s ease-out;
 }
 @keyframes newTileAppear {
-    0% { transform: scale(0.5); opacity: 0.5; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(0.5);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .tile-merged {
@@ -194,11 +222,16 @@ header h1 {
     z-index: 3; /* Merged tile temporarily on top */
 }
 @keyframes mergedTilePulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
-
 
 .overlay {
     position: absolute;
@@ -214,7 +247,9 @@ header h1 {
     z-index: 100; /* Above tiles */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    transition:
+        opacity 0.3s ease-in-out,
+        visibility 0.3s ease-in-out;
     text-align: center;
 }
 
@@ -242,5 +277,13 @@ footer {
 }
 
 /* Adjust tile font size for larger numbers */
-.tile.tile-128, .tile.tile-256, .tile.tile-512 { font-size: clamp(1.1rem, 4.5vw, 2.2rem); }
-.tile.tile-1024, .tile.tile-2048, .tile.tile-super { font-size: clamp(0.9rem, 4vw, 1.8rem); }
+.tile.tile-128,
+.tile.tile-256,
+.tile.tile-512 {
+    font-size: clamp(1.1rem, 4.5vw, 2.2rem);
+}
+.tile.tile-1024,
+.tile.tile-2048,
+.tile.tile-super {
+    font-size: clamp(0.9rem, 4vw, 1.8rem);
+}
