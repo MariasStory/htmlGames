@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Particle Text Animation</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      display: block;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    // Canvas setup
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Resize canvas to window size
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Text to render
+    const text = "HUUGL";
+    const fontSize = 250;
+    const particleSize = 2;
+    const particlesDencity = 8; // Dencity of the particles
+    const springStrength = 0.05; // How fast particles return to target
+    const repelStrength = 100; // How strong the repulsion is
+    const maxDistance = 100; // Max distance for repulsion
+    const particleCount = 19360; // Mac number of particles
+
+    // Particle class
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.targetX = x;
+        this.targetY = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.color = getRandomColor();
+      }
+
+      // Update position based on physics
+      update(mouseX, mouseY) {
+        const dx = this.targetX - this.x;
+        const dy = this.targetY - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Spring back to target
+        if (dist > 1) {
+          this.vx += dx * springStrength;
+          this.vy += dy * springStrength;
+        }
+
+        // Mouse interaction: repel if near
+        const mouseDist = Math.hypot(mouseX - this.x, mouseY - this.y);
+        if (mouseDist < maxDistance) {
+          const repelX = (this.x - mouseX) / mouseDist;
+          const repelY = (this.y - mouseY) / mouseDist;
+          this.vx += repelX * repelStrength / mouseDist;
+          this.vy += repelY * repelStrength / mouseDist;
+        }
+
+        // Apply velocity
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Damping to prevent overshoot
+        this.vx *= 0.95;
+        this.vy *= 0.95;
+      }
+
+      // Draw particle
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, particleSize, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Get random gradient color
+    function getRandomColor() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `hsl(${Math.random() * 360}, 70%, 60%)`;
+    }
+
+    // Create particles from text
+    function createParticles() {
+      const particles = [];
+      const textWidth = fontSize * text.length;
+      const textHeight = fontSize;
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw text to get pixel positions
+      ctx.font = `${fontSize}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,0.01)';
+      ctx.fillText(text, centerX, centerY);
+
+      // Get pixel data
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      // Create particles only where text is visible
+      for (let y = 0; y < canvas.height; y += particlesDencity) {
+        for (let x = 0; x < canvas.width; x += particlesDencity) {
+          const index = (y * canvas.width + x) * 4;
+          const r = data[index];
+          const g = data[index + 1];
+          const b = data[index + 2];
+          const a = data[index + 3];
+
+          // Only consider pixels that are not transparent
+          if (r > 0 || g > 0 || b > 0) {
+            const px = x;
+            const py = y;
+
+            // Create particle with target at text position
+            const particle = new Particle(px, py);
+            particle.targetX = px;
+            particle.targetY = py;
+            particles.push(particle);
+          }
+        }
+      }
+
+      // Limit particle count
+      return particles.slice(0, particleCount);
+    }
+
+    // Mouse tracking
+    let mouseX = 0;
+    let mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // Animation loop
+    function animate() {
+      // Clear canvas with fade effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Update and draw particles
+      particles.forEach(p => {
+        p.update(mouseX, mouseY);
+        p.draw();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    // Initialize
+    let particles = createParticles();
+    animate();
+
+    // Optional: reset particles on click
+    document.addEventListener('click', () => {
+      particles = createParticles();
+    });
+  </script>
+</body>
+</html>

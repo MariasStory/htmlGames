@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Gravity Drift</title>
+    <style>
+        :root {
+            --bg-color: #050510;
+            --primary: #00f3ff;
+            --secondary: #bc13fe;
+            --success: #0aff0a;
+            --danger: #ff0055;
+            --text-color: #ffffff;
+            --glass: rgba(255, 255, 255, 0.1);
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            font-family: var(--font-main);
+            color: var(--text-color);
+        }
+
+        /* --- UI Overlay --- */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Let clicks pass through to canvas */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* --- Modals --- */
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 16, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            border: 1px solid var(--glass);
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        }
+
+        .modal h2 {
+            font-size: 3rem;
+            margin: 0 0 20px 0;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary);
+        }
+
+        .modal p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            font-family: var(--font-main);
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        .controls-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .key {
+            display: inline-block;
+            background: #333;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            color: #fff;
+            margin: 0 2px;
+        }
+
+        /* --- Canvas --- */
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Toast Notification --- */
+        #toast {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(10, 255, 10, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <header>
+            <h1>Neon Gravity Drift</h1>
+            <div class="stats">Level: <span id="level-display">1</span></div>
+        </header>
+        <div id="toast">Level Complete!</div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="modal">
+        <div class="modal-content">
+            <h2>Escape Gravity</h2>
+            <p>Navigate your ship through the void using gravity wells. Use the black holes to slingshot yourself to the green portal.</p>
+            <p><strong>Controls:</strong> Click & Drag anywhere to aim, release to shoot.</p>
+            <button class="btn" id="start-btn">Initialize</button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over-screen" class="modal hidden">
+        <div class="modal-content">
+            <h2 style="color: var(--danger); text-shadow: 0 0 20px var(--danger);">Critical Failure</h2>
+            <p>Your ship has been destroyed by the void.</p>
+            <button class="btn" id="restart-btn">Reboot System</button>
+        </div>
+    </div>
+
+    <!-- Level Complete Screen -->
+    <div id="level-complete-screen" class="modal hidden">
+        <div class="modal-content">
+            <h2 style="color: var(--success); text-shadow: 0 0 20px var(--success);">Success</h2>
+            <p>Wormhole stabilized. Ready for next sector?</p>
+            <button class="btn" id="next-level-btn">Next Sector</button>
+        </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        /**
+         * NEON GRAVITY DRIFT
+         * A physics-based escape game.
+         */
+
+        // --- Configuration & Constants ---
+        const CONFIG = {
+            friction: 0.98,
+            playerSpeed: 0.001,
+            playerMaxSpeed: 0.1,
+            gravityStrength: 12.8,
+            blackHoleRadius: 25,
+            asteroidRadius: 20,
+            playerRadius: 8,
+            portalRadius: 30,
+            colors: {
+                player: '#00f3ff',
+                blackHole: '#bc13fe',
+                asteroid: '#ff0055',
+                portal: '#0aff0a',
+                trail: 'rgba(0, 243, 255, 0.5)',
+                aim: 'rgba(255, 255, 255, 0.3)'
+            }
+        };
+
+        // --- Audio System (Web Audio API) ---
+        const AudioSys = {
+            ctx: null,
+            init: function() {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioContext();
+            },
+            playTone: function(freq, type, duration, vol = 0.1) {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            },
+            shoot: function() {
+                this.playTone(400, 'sawtooth', 0.2, 0.05);
+            },
+            explode: function() {
+                this.playTone(100, 'square', 0.5, 0.1);
+            },
+            win: function() {
+                this.playTone(600, 'sine', 0.1, 0.1);
+                setTimeout(() => this.playTone(800, 'sine', 0.2, 0.1), 100);
+                setTimeout(() => this.playTone(1200, 'sine', 0.4, 0.1), 200);
+            }
+        };
+
+        // --- Game State ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let gameState = {
+            level: 1,
+            isPlaying: false,
+            width: 0,
+            height: 0,
+            entities: [],
+            particles: [],
+            player: null,
+            portal: null,
+            stars: [],
+            levesRandomNrSeed: [637171, 812196, 283278, 609045, 381967, 903805, 917804, 229049, 683460, 165584, 35108, 413055],
+            aim: { active: false, startX: 0, startY: 0, currX: 0, currY: 0 }
+        };
+
+        // semi random numbers with a seed
+        function createRandom(seed) {
+            return function() {
+                let t = seed += 0x6D2B79F5;
+                t = Math.imul(t ^ (t >>> 15), t | 1);
+                t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            }
+        };
+
+        // initialize a semi random function with a random seed, for later reuse of seed with the best levels
+        const theRandomSeed = crypto.getRandomValues(new Uint32Array(1)) % 1000000;
+        let rng = createRandom(theRandomSeed);
+
+        // --- Classes ---
+
+        class Vector {
+            constructor(x, y) { this.x = x; this.y = y; }
+            add(v) { this.x += v.x; this.y += v.y; return this; }
+            sub(v) { this.x -= v.x; this.y -= v.y; return this; }
+            mult(n) { this.x *= n; this.y *= n; return this; }
+            mag() { return Math.sqrt(this.x * this.x + this.y * this.y); }
+            normalize() {
+                let m = this.mag();
+                if (m !== 0) this.mult(1/m);
+                return this;
+            }
+            copy() { return new Vector(this.x, this.y); }
+            static sub(v1, v2) { return new Vector(v1.x - v2.x, v1.y - v2.y); }
+        }
+
+        class Particle {
+            constructor(x, y, color, speed) {
+                this.pos = new Vector(x, y);
+                this.vel = new Vector((rng() - 0.5) * speed, (rng() - 0.5) * speed);
+                this.life = 1.0;
+                this.decay = rng() * 0.03 + 0.01;
+                this.color = color;
+                this.size = rng() * 3 + 1;
+            }
+            update() {
+                this.pos.add(this.vel);
+                this.life -= this.decay;
+            }
+            draw(ctx) {
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        class Star {
+            constructor() {
+                this.x = rng() * gameState.width;
+                this.y = rng() * gameState.height;
+                this.size = rng() * 1.5;
+                this.alpha = rng();
+            }
+            draw(ctx) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class Entity {
+            constructor(x, y, radius, color) {
+                this.pos = new Vector(x, y);
+                this.vel = new Vector(0, 0);
+                this.radius = radius;
+                this.color = color;
+                this.mass = radius;
+            }
+            draw(ctx) {
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        class Player extends Entity {
+            constructor(x, y) {
+                super(x, y, CONFIG.playerRadius, CONFIG.colors.player);
+                this.trail = [];
+            }
+
+            update() {
+                // Physics
+                this.pos.add(this.vel);
+                this.vel.mult(CONFIG.friction);
+
+                // Screen Wrap (optional, but good for flow)
+                if (this.pos.x < -this.radius) this.pos.x = gameState.width + this.radius;
+                if (this.pos.x > gameState.width + this.radius) this.pos.x = -this.radius;
+                if (this.pos.y < -this.radius) this.pos.y = gameState.height + this.radius;
+                if (this.pos.y > gameState.height + this.radius) this.pos.y = -this.radius;
+
+                // Trail Logic
+                this.trail.push({x: this.pos.x, y: this.pos.y, alpha: 1.0});
+                if (this.trail.length > 20) this.trail.shift();
+                this.trail.forEach(t => t.alpha -= 0.05);
+            }
+
+            draw(ctx) {
+                // Draw Trail
+                ctx.beginPath();
+                for (let i = 0; i < this.trail.length - 1; i++) {
+                    const t = this.trail[i];
+                    ctx.strokeStyle = `rgba(0, 243, 255, ${t.alpha})`;
+                    ctx.lineWidth = 2;
+                    ctx.lineTo(t.x, t.y);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(t.x, t.y);
+                }
+
+                // Draw Ship
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = this.color;
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Inner glow
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, this.radius * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        class BlackHole extends Entity {
+            constructor(x, y) {
+                super(x, y, CONFIG.blackHoleRadius, CONFIG.colors.blackHole);
+                this.pulse = 0;
+            }
+
+            update() {
+                this.pulse += 0.05;
+                // Apply Gravity to Player
+                if (gameState.player) {
+                    let dir = Vector.sub(this.pos, gameState.player.pos);
+                    let dist = dir.mag();
+                    dir.normalize();
+
+                    // Gravity Formula: F = G * (m1*m2) / r^2
+                    // We clamp distance to avoid infinite force
+                    let force = (CONFIG.gravityStrength * 1000) / (dist * dist + 100);
+                    force = Math.min(force, 0.5); // Cap force
+
+                    gameState.player.vel.add(dir.mult(force));
+                }
+            }
+
+            draw(ctx) {
+                const pulseSize = Math.sin(this.pulse) * 3;
+
+                // Accretion Disk
+                ctx.shadowBlur = 30;
+                ctx.shadowColor = this.color;
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, this.radius + 5 + pulseSize, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Core
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, this.radius - 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        class Asteroid extends Entity {
+            constructor(x, y) {
+                super(x, y, CONFIG.asteroidRadius, CONFIG.colors.asteroid);
+                // Random drift
+                this.vel = new Vector((rng()-0.5)*0.5, (rng()-0.5)*0.5);
+            }
+
+            update() {
+                this.pos.add(this.vel);
+                // Bounce off walls
+                if (this.pos.x < this.radius || this.pos.x > gameState.width - this.radius) this.vel.x *= -1;
+                if (this.pos.y < this.radius || this.pos.y > gameState.height - this.radius) this.vel.y *= -1;
+            }
+        }
+
+        class Portal extends Entity {
+            constructor(x, y) {
+                super(x, y, CONFIG.portalRadius, CONFIG.colors.portal);
+                this.angle = 0;
+            }
+
+            draw(ctx) {
+                this.angle += 0.05;
+                ctx.save();
+                ctx.translate(this.pos.x, this.pos.y);
+                ctx.rotate(this.angle);
+
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = this.color;
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 3;
+
+                // Draw a hexagon or complex shape
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = (Math.PI / 3) * i;
+                    const r = this.radius + Math.sin(this.angle * 2) * 5;
+                    const x = Math.cos(angle) * r;
+                    const y = Math.sin(angle) * r;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.stroke();
+
+                // Inner swirl
+                ctx.fillStyle = `rgba(10, 255, 10, 0.2)`;
+                ctx.fill();
+
+                ctx.restore();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // --- Core Functions ---
+
+        function initGame() {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Input Listeners
+            canvas.addEventListener('mousedown', handleInputStart);
+            canvas.addEventListener('mousemove', handleInputMove);
+            window.addEventListener('mouseup', handleInputEnd);
+
+            canvas.addEventListener('touchstart', (e) => handleInputStart(e.touches[0]));
+            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); handleInputMove(e.touches[0]); });
+            window.addEventListener('touchend', handleInputEnd);
+
+            // UI Buttons
+            document.getElementById('start-btn').addEventListener('click', () => {
+                AudioSys.init();
+                document.getElementById('start-screen').classList.add('hidden');
+                startLevel(1);
+            });
+
+            document.getElementById('restart-btn').addEventListener('click', () => {
+                document.getElementById('game-over-screen').classList.add('hidden');
+                startLevel(gameState.level);
+            });
+
+            document.getElementById('next-level-btn').addEventListener('click', () => {
+                document.getElementById('level-complete-screen').classList.add('hidden');
+                startLevel(gameState.level + 1);
+            });
+
+            // Generate Stars
+            for(let i=0; i<100; i++) {
+                gameState.stars.push(new Star());
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resizeCanvas() {
+            gameState.width = window.innerWidth;
+            gameState.height = window.innerHeight;
+            canvas.width = gameState.width;
+            canvas.height = gameState.height;
+        }
+
+        function startLevel(level) {
+            let levelRng = gameState?.levesRandomNrSeed?.[level -1] ?? crypto.getRandomValues(new Uint32Array(1)) % 1000000;
+            console.log("Level:", level, "Seed:", levelRng);
+            rng = createRandom(levelRng); // initialize unique random numbers for the level
+            gameState.level = level;
+            gameState.isPlaying = true;
+            gameState.entities = [];
+            gameState.particles = [];
+            gameState.player = null;
+            gameState.portal = null;
+
+            document.getElementById('level-display').innerText = level;
+
+            // Spawn Player (Left side)
+            gameState.player = new Player(50, gameState.height / 2);
+
+            // Spawn Portal (Right side)
+            gameState.portal = new Portal(gameState.width / 2, gameState.height / 2);
+
+            // Generate Obstacles based on level
+            const obstacleCount = 2 + level;
+            for (let i = 0; i < obstacleCount; i++) {
+                let x, y;
+                // Ensure not spawning on player or portal
+                do {
+                    x = rng() * (gameState.width - 100) + 50;
+                    y = rng() * (gameState.height - 100) + 50;
+                } while (Math.abs(x - 50) < 100 && Math.abs(y - gameState.height/2) < 100);
+
+                // 30% chance of Black Hole, 70% Asteroid
+                if (rng() > 0.7) {
+                    gameState.entities.push(new BlackHole(x, y));
+                } else {
+                    gameState.entities.push(new Asteroid(x, y));
+                }
+            }
+        }
+
+        function handleInputStart(e) {
+            if (!gameState.isPlaying) return;
+            gameState.aim.active = true;
+            gameState.aim.startX = e.clientX;
+            gameState.aim.startY = e.clientY;
+            gameState.aim.currX = e.clientX;
+            gameState.aim.currY = e.clientY;
+        }
+
+        function handleInputMove(e) {
+            if (!gameState.aim.active) return;
+            gameState.aim.currX = e.clientX;
+            gameState.aim.currY = e.clientY;
+        }
+
+        function handleInputEnd() {
+            if (!gameState.aim.active) return;
+            gameState.aim.active = false;
+
+            // Calculate vector
+            let dx = gameState.aim.startX - gameState.aim.currX;
+            let dy = gameState.aim.startY - gameState.aim.currY;
+
+            // Limit power
+            const maxPull = 200;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist > maxPull) {
+                const ratio = maxPull / dist;
+                dx *= ratio;
+                dy *= ratio;
+            }
+
+            // Apply velocity
+            gameState.player.vel.x = dx * 0.15;
+            gameState.player.vel.y = dy * 0.15;
+
+            AudioSys.shoot();
+
+            // Spawn particles at player
+            for(let i=0; i<5; i++) {
+                gameState.particles.push(new Particle(gameState.player.pos.x, gameState.player.pos.y, CONFIG.colors.player, 2));
+            }
+        }
+
+        function createExplosion(x, y, color) {
+            for(let i=0; i<20; i++) {
+                gameState.particles.push(new Particle(x, y, color, 5));
+            }
+        }
+
+        function checkCollisions() {
+            const p = gameState.player;
+            const portal = gameState.portal;
+
+            // 1. Portal Collision
+            let distToPortal = Vector.sub(p.pos, portal.pos).mag();
+            if (distToPortal < portal.radius + p.radius) {
+                levelComplete();
+                return;
+            }
+
+            // 2. Entity Collisions
+            for (let ent of gameState.entities) {
+                let dist = Vector.sub(p.pos, ent.pos).mag();
+                if (dist < p.radius + ent.radius) {
+                    if (ent instanceof BlackHole) {
+                        // Black hole sucks you in, game over
+                        createExplosion(p.pos.x, p.pos.y, CONFIG.colors.player);
+                        gameOver();
+                    } else if (ent instanceof Asteroid) {
+                        // Asteroid hits you
+                        createExplosion(p.pos.x, p.pos.y, CONFIG.colors.asteroid);
+                        gameOver();
+                    }
+                }
+            }
+        }
+
+        function levelComplete() {
+            gameState.isPlaying = false;
+            AudioSys.win();
+            document.getElementById('level-complete-screen').classList.remove('hidden');
+        }
+
+        function gameOver() {
+            gameState.isPlaying = false;
+            AudioSys.explode();
+            document.getElementById('game-over-screen').classList.remove('hidden');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.opacity = 1;
+            setTimeout(() => t.style.opacity = 0, 2000);
+        }
+
+        // --- Main Loop ---
+
+        function gameLoop() {
+            // Clear Screen
+            ctx.fillStyle = CONFIG.colors.bg;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Stars
+            gameState.stars.forEach(star => star.draw(ctx));
+
+            if (gameState.isPlaying) {
+                // Update & Draw Entities
+                gameState.entities.forEach(ent => {
+                    ent.update();
+                    ent.draw(ctx);
+                });
+
+                // Update & Draw Player
+                gameState.player.update();
+                gameState.player.draw(ctx);
+
+                // Draw Portal
+                gameState.portal.draw(ctx);
+
+                // Check Collisions
+                checkCollisions();
+            }
+
+            // Draw Particles (Always update for explosion effects)
+            for (let i = gameState.particles.length - 1; i >= 0; i--) {
+                let p = gameState.particles[i];
+                p.update();
+                p.draw(ctx);
+                if (p.life <= 0) gameState.particles.splice(i, 1);
+            }
+
+            // Draw Aim Line
+            if (gameState.aim.active && gameState.player) {
+                ctx.beginPath();
+                ctx.moveTo(gameState.player.pos.x, gameState.player.pos.y);
+                ctx.lineTo(gameState.aim.currX, gameState.aim.currY);
+                ctx.strokeStyle = CONFIG.colors.aim;
+                ctx.setLineDash([5, 5]);
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Draw predicted trajectory (simple visual)
+                // Just a small circle at the end of the line
+                ctx.beginPath();
+                ctx.arc(gameState.aim.currX, gameState.aim.currY, 5, 0, Math.PI*2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start
+        initGame();
+
+    </script>
+</body>
+</html>
