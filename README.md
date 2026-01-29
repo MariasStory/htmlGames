@@ -56,10 +56,6 @@ Get ready to click, type, and play! Here are the games currently live in our col
 *   **Tech:** HTML, CSS, JavaScript (String Manipulation, Event Listeners, Basic Logic)
 *   **Folder:** [`spell_game/`](./spell_game/)
 
-**(Highly Recommended: Add a GIF here!)**
-[![Spell Game Screenshot/GIF](placeholder_link_to_spell_game_image_or_gif.gif)](./spell_game/)
-*Click image or link above to see the code!*
-
 **➡️ [Play Spell Master Challenge LIVE!](https://mariasstory.github.io/htmlGames/spell_game/spell_game.html) ⬅️**
 
 ---
