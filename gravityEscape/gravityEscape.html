@@ -208,6 +208,7 @@
             <h2 style="color: var(--danger); text-shadow: 0 0 20px var(--danger);">Critical Failure</h2>
             <p>Your ship has been destroyed by the void.</p>
             <button class="btn" id="restart-btn">Reboot System</button>
+            <button class="btn" style="margin-top: 2em; font-size: 0.7em; width: 50%; padding: 0.3em; color: burlywood; display: none;" id="skip-btn">Skip the level</button>
         </div>
     </div>
 
@@ -246,7 +247,8 @@
                 portal: '#0aff0a',
                 trail: 'rgba(0, 243, 255, 0.5)',
                 aim: 'rgba(255, 255, 255, 0.3)'
-            }
+            },
+            leveRandomNrSeeds: [637171, 812196, 283278, 609045, 381967, 903805, 917804, 229049, 165584, 35108, 413055]
         };
 
         // --- Audio System (Web Audio API) ---
@@ -288,6 +290,8 @@
 
         let gameState = {
             level: 1,
+            levelRepeats: 0,
+            levelRng: CONFIG.leveRandomNrSeeds[0],
             isPlaying: false,
             width: 0,
             height: 0,
@@ -296,7 +300,6 @@
             player: null,
             portal: null,
             stars: [],
-            levesRandomNrSeed: [637171, 812196, 283278, 609045, 381967, 903805, 917804, 229049, 683460, 165584, 35108, 413055],
             aim: { active: false, startX: 0, startY: 0, currX: 0, currY: 0 }
         };
 
@@ -563,7 +566,13 @@
 
             document.getElementById('restart-btn').addEventListener('click', () => {
                 document.getElementById('game-over-screen').classList.add('hidden');
-                startLevel(gameState.level);
+                startLevel(gameState.level, false);
+            });
+
+            document.getElementById('skip-btn').addEventListener('click', () => {
+                document.getElementById('skip-btn').style.display = "none";
+                document.getElementById('game-over-screen').classList.add('hidden');
+                startLevel(gameState.level + 1);
             });
 
             document.getElementById('next-level-btn').addEventListener('click', () => {
@@ -586,10 +595,16 @@
             canvas.height = gameState.height;
         }
 
-        function startLevel(level) {
-            let levelRng = gameState?.levesRandomNrSeed?.[level -1] ?? crypto.getRandomValues(new Uint32Array(1)) % 1000000;
-            console.log("Level:", level, "Seed:", levelRng);
-            rng = createRandom(levelRng); // initialize unique random numbers for the level
+        function startLevel(level, changeSeed = true) {
+            if (changeSeed){
+                gameState.levelRepeats = 0;
+                gameState.levelRng = CONFIG?.leveRandomNrSeeds?.[level -1] ?? crypto.getRandomValues(new Uint32Array(1)) % 1000000;
+                console.log("Level:", level, "Seed:", gameState.levelRng);
+                document.getElementById('skip-btn').style.display = "none";
+            } else {
+                gameState.levelRepeats++;
+            }
+            rng = createRandom(gameState.levelRng); // initialize unique random numbers for the level
             gameState.level = level;
             gameState.isPlaying = true;
             gameState.entities = [];
@@ -712,6 +727,8 @@
             gameState.isPlaying = false;
             AudioSys.explode();
             document.getElementById('game-over-screen').classList.remove('hidden');
+            if (gameState.levelRepeats > 1) document.getElementById('skip-btn').style.display = "inline";
+
         }
 
         function showToast(msg) {
