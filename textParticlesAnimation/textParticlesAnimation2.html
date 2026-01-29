@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Particle Text | Kinetic Typography</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Inter', sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        .ui-panel {
+            backdrop-filter: blur(10px);
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            margin-top: -6px; 
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+        .title-gradient {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas Layer -->
+    <canvas id="canvas1"></canvas>
+
+    <!-- UI Overlay -->
+    <div class="absolute top-0 left-0 w-full p-6 pointer-events-none flex justify-between items-start z-10">
+        <div>
+            <h1 class="text-4xl font-bold tracking-tighter title-gradient mb-2">PARTICLE SYSTEM</h1>
+            <p class="text-gray-400 text-sm max-w-md">
+                Move your mouse over the text to disturb the field. <br>
+                The dots are attracted by a spring force to their original positions.
+            </p>
+        </div>
+    </div>
+
+    <div class="absolute bottom-6 left-6 z-10 pointer-events-auto">
+        <div class="ui-panel p-6 rounded-2xl shadow-2xl w-80 text-white">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-bold uppercase tracking-widest text-gray-300">Configuration</h2>
+                <div id="status-indicator" class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+
+            <!-- Text Input -->
+            <div class="mb-5">
+                <label class="block text-xs text-gray-400 mb-2 uppercase">Content</label>
+                <div class="flex gap-2">
+                    <input type="text" id="textInput" value="HUUGL" maxlength="10" 
+                        class="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors font-mono tracking-widest text-center uppercase">
+                    <button id="randomizeBtn" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded transition-colors" title="Random Word">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Toggles / Buttons -->
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <button id="btn-text" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 px-4 rounded transition-all border border-transparent">
+                    TEXT MODE
+                </button>
+                <button id="btn-cursor" class="bg-transparent hover:bg-white/10 text-gray-300 text-xs font-bold py-2 px-4 rounded transition-all border border-gray-600">
+                    POINTER MODE
+                </button>
+            </div>
+
+            <!-- Sliders -->
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>Repulsion Radius</span>
+                        <span id="radiusVal">80</span>
+                    </div>
+                    <input type="range" id="radiusRange" min="20" max="200" value="80">
+                </div>
+                
+                <div>
+                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>Spring Stiffness</span>
+                        <span id="springVal">0.08</span>
+                    </div>
+                    <input type="range" id="springRange" min="1" max="50" value="8"> <!-- 0.01 to 0.5 -->
+                </div>
+
+                 <div>
+                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>Damping (Friction)</span>
+                        <span id="dampVal">0.90</span>
+                    </div>
+                    <input type="range" id="dampRange" min="80" max="99" value="90">
+                </div>
+
+                 <div>
+                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>Particle Size</span>
+                        <span id="sizeVal">1.5</span>
+                    </div>
+                    <input type="range" id="sizeRange" min="1" max="10" value="3">
+                </div>
+                
+                <div>
+                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>Chaos (Jitter)</span>
+                        <span id="chaosVal">0.0</span>
+                    </div>
+                    <input type="range" id="chaosRange" min="0" max="10" value="0">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Overlay (Bottom Right) -->
+    <div class="absolute bottom-6 right-6 text-right pointer-events-none hidden md:block">
+        <div class="text-gray-500 text-xs font-mono">
+            <div class="mb-1">MOUSE: INTERACT</div>
+            <div>CLICK: SCATTER</div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Particle Text Engine
+         * Uses a hidden canvas to sample pixel data from text, then maps those pixels to particle coordinates.
+         */
+
+        const canvas = document.getElementById('canvas1');
+        const ctx = canvas.getContext('2d');
+        
+        // UI Elements
+        const textInput = document.getElementById('textInput');
+        const randomizeBtn = document.getElementById('randomizeBtn');
+        const btnText = document.getElementById('btn-text');
+        const btnCursor = document.getElementById('btn-cursor');
+        
+        // Settings
+        let settings = {
+            radius: 80,
+            stiffness: 0.08,
+            damping: 0.90,
+            baseSize: 1.5,
+            chaos: 0,
+            mode: 'TEXT' // 'TEXT' or 'CURSOR'
+        };
+
+        let particleArray = [];
+        let adjustX = 0;
+        let adjustY = 0;
+        
+        // Mouse state
+        const mouse = {
+            x: null,
+            y: null,
+            radius: 60
+        };
+
+        // Window Resize Handling
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', function(){
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        // Mouse Events
+        window.addEventListener('mousemove', function(event){
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener('mousedown', function(){
+            // Explode effect on click
+            particleArray.forEach(particle => {
+                const dx = mouse.x - particle.x;
+                const dy = mouse.y - particle.y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                if(distance < settings.radius * 3) {
+                    const forceDirectionX = dx / distance;
+                    const forceDirectionY = dy / distance;
+                    const force = (settings.radius * 3 - distance);
+                    particle.vx -= forceDirectionX * force * 0.5;
+                    particle.vy -= forceDirectionY * force * 0.5;
+                }
+            });
+        });
+
+        window.addEventListener('mouseout', function(){
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        // Particle Class
+        class Particle {
+            constructor(x, y){
+                this.x = Math.random() * canvas.width; // Start random
+                this.y = Math.random() * canvas.height;
+                this.vx = 0;
+                this.vy = 0;
+                this.originX = x;
+                this.originY = y;
+                this.size = Math.random() * 2 + 1;
+                this.color = '#ffffff';
+                this.angle = Math.random() * 360; // For color cycling
+            }
+
+            draw(){
+                // Dynamic color based on position
+                // Create a gradient palette
+                const hue = (this.x / canvas.width) * 60 + 180; // Cyan to Blue
+                const lightness = 50 + (this.y / canvas.height) * 20;
+                ctx.fillStyle = `hsl(${hue}, 100%, ${lightness}%)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, settings.baseSize * this.size/2, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update(){
+                // Calculate distance from mouse
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                
+                // Max distance for interaction
+                const maxDistance = settings.radius;
+                
+                // Repulsion / Explosion
+                if (distance < maxDistance && mouse.x != null) {
+                    const force = (maxDistance - distance) / maxDistance;
+                    const directionX = forceDirectionX * force * 8; // Strength
+                    const directionY = forceDirectionY * force * 8;
+                    
+                    this.vx -= directionX;
+                    this.vy -= directionY;
+                }
+
+                // Spring force to origin
+                if (settings.mode === 'TEXT') {
+                    let homeDx = this.x - this.originX;
+                    let homeDy = this.y - this.originY;
+                    
+                    this.vx -= homeDx * settings.stiffness;
+                    this.vy -= homeDy * settings.stiffness;
+                } else {
+                    // Cursor mode - particles follow loosely
+                    let homeDx = this.x - this.originX;
+                    let homeDy = this.y - this.originY;
+                    // Wider spring for wobbly effect
+                    this.vx -= homeDx * 0.02;
+                    this.vy -= homeDy * 0.02;
+                }
+
+                // Chaos/Jitter
+                if (settings.chaos > 0) {
+                    this.vx += (Math.random() - 0.5) * settings.chaos;
+                    this.vy += (Math.random() - 0.5) * settings.chaos;
+                }
+
+                // Apply Velocity
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Friction/Damping
+                this.vx *= settings.damping;
+                this.vy *= settings.damping;
+
+                // Boundary check (keep on screen if mode is not text)
+                if (settings.mode === 'CURSOR') {
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+            }
+        }
+
+        // Text Sampling Logic
+        function init() {
+            particleArray = [];
+            
+            // Create temporary canvas to draw text
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+
+            // Text Styling
+            const fontSize = Math.min(canvas.width / 4, 300);
+            tempCtx.font = `900 ${fontSize}px 'Inter', 'Arial', sans-serif`;
+            tempCtx.fillStyle = 'white';
+            tempCtx.textAlign = 'center';
+            tempCtx.textBaseline = 'middle';
+            
+            // Draw Text
+            const text = textInput.value || "HUUGL";
+            tempCtx.fillText(text, tempCanvas.width/2, tempCanvas.height/2);
+            
+            // Scan Text
+            const textCoordinates = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            
+            // Density: Step for scanning pixels (e.g., every 5th pixel)
+            const step = 5; 
+            
+            for (let y = 0; y < textCoordinates.height; y += step){
+                for (let x = 0; x < textCoordinates.width; x += step){
+                    // Check alpha value
+                    if (textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128){
+                        let positionX = x;
+                        let positionY = y;
+                        particleArray.push(new Particle(positionX, positionY));
+                    }
+                }
+            }
+            
+            console.log(`Generated ${particleArray.length} particles`);
+        }
+
+        // Animation Loop
+        function animate(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Optional: Add a subtle trail effect
+            // ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            // ctx.fillRect(0,0,canvas.width, canvas.height);
+
+            for (let i = 0; i < particleArray.length; i++){
+                particleArray[i].draw();
+                particleArray[i].update();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // UI Event Listeners
+        
+        // Sliders
+        document.getElementById('radiusRange').addEventListener('input', (e) => {
+            settings.radius = parseInt(e.target.value);
+            document.getElementById('radiusVal').innerText = settings.radius;
+        });
+        
+        document.getElementById('springRange').addEventListener('input', (e) => {
+            // Map 1-50 to 0.01-0.5
+            const val = parseInt(e.target.value);
+            settings.stiffness = val / 100;
+            document.getElementById('springVal').innerText = settings.stiffness.toFixed(2);
+        });
+
+        document.getElementById('dampRange').addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            settings.damping = val / 100;
+            document.getElementById('dampVal').innerText = settings.damping.toFixed(2);
+        });
+
+        document.getElementById('sizeRange').addEventListener('input', (e) => {
+            settings.baseSize = parseFloat(e.target.value);
+            document.getElementById('sizeVal').innerText = settings.baseSize;
+        });
+
+        document.getElementById('chaosRange').addEventListener('input', (e) => {
+            settings.chaos = parseFloat(e.target.value);
+            document.getElementById('chaosVal').innerText = settings.chaos;
+        });
+
+        // Text Input
+        textInput.addEventListener('input', debounce(init, 300));
+
+        // Randomize
+        const words = ["CODE", "DATA", "LOVE", "VOID", "FLUX", "NEON", "WAVE", "CORE", "HIVE"];
+        randomizeBtn.addEventListener('click', () => {
+            const rand = words[Math.floor(Math.random() * words.length)];
+            textInput.value = rand;
+            init();
+            // Small visual feedback
+            randomizeBtn.classList.add('rotate-180');
+            setTimeout(() => randomizeBtn.classList.remove('rotate-180'), 300);
+        });
+
+        // Mode Switchers
+        btnText.addEventListener('click', () => {
+            settings.mode = 'TEXT';
+            btnText.classList.replace('bg-transparent', 'bg-blue-600');
+            btnText.classList.replace('text-gray-300', 'text-white');
+            btnText.classList.add('border-transparent');
+            btnText.classList.remove('border-gray-600');
+            
+            btnCursor.classList.replace('bg-blue-600', 'bg-transparent');
+            btnCursor.classList.replace('text-white', 'text-gray-300');
+            btnCursor.classList.remove('border-transparent');
+            btnCursor.classList.add('border-gray-600');
+        });
+
+        btnCursor.addEventListener('click', () => {
+            settings.mode = 'CURSOR';
+            btnCursor.classList.replace('bg-transparent', 'bg-blue-600');
+            btnCursor.classList.replace('text-gray-300', 'text-white');
+            btnCursor.classList.add('border-transparent');
+            btnCursor.classList.remove('border-gray-600');
+
+            btnText.classList.replace('bg-blue-600', 'bg-transparent');
+            btnText.classList.replace('text-white', 'text-gray-300');
+            btnText.classList.remove('border-transparent');
+            btnText.classList.add('border-gray-600');
+            
+            // Scatter particles slightly when switching modes
+            particleArray.forEach(p => {
+                p.vx += (Math.random() - 0.5) * 5;
+                p.vy += (Math.random() - 0.5) * 5;
+            });
+        });
+
+        // Utility: Debounce
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Start
+        init();
+        animate();
+
+    </script>
+</body>
+</html>

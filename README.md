@@ -20,7 +20,19 @@ Get ready to click, type, and play! Here are the games currently live in our col
 
 ---
 
-### 🎈 1. Balloon Pop Mania
+### 🚀 1. Escape gravity
+
+**Click & Drag anywhere to aim, release to shoot.**
+
+*   **Description:** Navigate your ship through the void using gravity wells. Use the black holes to slingshot yourself to the green portal.
+*   **Tech:** HTML, CSS (Animations), JavaScript (DOM Manipulation, Event Listeners, Timers)
+*   **Folder:** [`gravityEscape/`](./gravityEscape/)
+
+**➡️ [Play escape gravity LIVE!](https://mariasstory.github.io/htmlGames/gravityEscape/gravityEscape.html) ⬅️**
+
+---
+
+### 🎈 2. Balloon Pop Mania
 
 **Pop the balloons before they float away! Test your speed and accuracy in this colourful and addictive clicker game.**
 
@@ -28,15 +40,15 @@ Get ready to click, type, and play! Here are the games currently live in our col
 *   **Tech:** HTML, CSS (Animations), JavaScript (DOM Manipulation, Event Listeners, Timers)
 *   **Folder:** [`balloon_pop_game/`](./balloon_pop_game/)
 
-**(Highly Recommended: Add a GIF here!)**
+<!-- **(Highly Recommended: Add a GIF here!)**
 [![Balloon Pop Game Screenshot/GIF](placeholder_link_to_balloon_pop_image_or_gif.gif)](./balloon_pop_game/)
-*Click image or link above to see the code!*
+*Click image or link above to see the code!* -->
 
 **➡️ [Play Balloon Pop Mania LIVE!](https://mariasstory.github.io/htmlGames/balloon_pop_game/balloon_pop_game.html) ⬅️**
 
 ---
 
-### 🧠 2. Spell Master Challenge
+### 🧠 3. Spell Master Challenge
 
 **Sharpen your spelling skills! Listen to the word (or see it!) and type it correctly to score points. Great for kids and language learners!**
 
@@ -52,17 +64,13 @@ Get ready to click, type, and play! Here are the games currently live in our col
 
 ---
 
-### 🧠 3. 2048 game
+### 🧠 4. 2048 game
 
 **Combine tiles to reach 2048 and beyond! Explore the cosmic levels!**
 
 *   **Description:** 2048 is an addictive single-player sliding tile puzzle game where you combine numbered tiles to reach the elusive 2048 tile - and beyond! Slide tiles on a 4×4 grid using your arrow keys (or swipe on touch devices) to merge matching numbers and rack up your score.
 *   **Tech:** HTML, CSS, JavaScript (String Manipulation, Event Listeners, Basic Logic)
 *   **Folder:** [`2048_game/`](./2048_game/)
-
-**(Highly Recommended: Add a GIF here!)**
-[![Spell Game Screenshot/GIF](placeholder_link_to_spell_game_image_or_gif.gif)](./2048_game/)
-*Click image or link above to see the code!*
 
 **➡️ [Play 2048 game LIVE!](https://mariasstory.github.io/htmlGames/2048_game/index.html) ⬅️** V1
 

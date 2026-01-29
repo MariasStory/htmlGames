@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Particle Text - HUUGL</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #050505; /* Deep black background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <div class="controls">Move mouse to interact</div>
+    <canvas id="mainCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let mouse = { x: -1000, y: -1000, radius: 100 };
+        
+        // Configuration
+        const config = {
+            text: "HUUGL",
+            font: "bold 20vw 'Arial', sans-serif", // Responsive font size
+            particleGap: 6, // Distance between particles (lower = denser)
+            ease: 0.08,     // Lower = smoother/slower return
+            friction: 0.92, // Controls bounciness (lower = more dampening)
+            repelRadius: 150,
+            repelStrength: 8
+        };
+
+        // Resize handling
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Re-initialize particles on resize to fit new center
+            initParticles();
+        }
+
+        window.addEventListener('resize', resize);
+
+        // Mouse tracking
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        // Touch support for mobile
+        window.addEventListener('touchmove', (e) => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        });
+
+        // Particle Class
+        class Particle {
+            constructor(x, y, color) {
+                this.originX = x;
+                this.originY = y;
+                this.x = Math.random() * width; // Start at random position
+                this.y = Math.random() * height;
+                this.vx = 0; // Velocity X
+                this.vy = 0; // Velocity Y
+                this.color = color;
+                this.size = Math.random() * 2 + 1;
+            }
+
+            update() {
+                // 1. Spring force to return to origin
+                // Distance from current position to target position
+                const dx = this.originX - this.x;
+                const dy = this.originY - this.y;
+                
+                // Hooke's Law: F = k * x (applied to velocity)
+                // We add the distance * ease to velocity
+                this.vx += dx * config.ease;
+                this.vy += dy * config.ease;
+
+                // 2. Mouse Interaction (Repulsion)
+                const distMouseX = this.x - mouse.x;
+                const distMouseY = this.y - mouse.y;
+                const distance = Math.sqrt(distMouseX * distMouseX + distMouseY * distMouseY);
+
+                if (distance < config.repelRadius) {
+                    const forceDirectionX = distMouseX / distance;
+                    const forceDirectionY = distMouseY / distance;
+                    const force = (config.repelRadius - distance) / config.repelRadius;
+                    
+                    // Push away
+                    const directionX = forceDirectionX * force * config.repelStrength;
+                    const directionY = forceDirectionY * force * config.repelStrength;
+                    
+                    this.vx += directionX;
+                    this.vy += directionY;
+                }
+
+                // 3. Apply Physics
+                this.vx *= config.friction;
+                this.vy *= config.friction;
+                
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        // Core Logic: Convert Text to Particles
+        function initParticles() {
+            particles = [];
+            
+            // 1. Create offscreen canvas to draw text
+            const offCanvas = document.createElement('canvas');
+            const offCtx = offCanvas.getContext('2d');
+            offCanvas.width = width;
+            offCanvas.height = height;
+
+            // 2. Draw text on offscreen canvas
+            // Adjust font size based on screen width slightly for better wrapping
+            const fontSize = Math.min(width / 4, 300); 
+            offCtx.font = `900 ${fontSize}px Arial`;
+            offCtx.fillStyle = 'white';
+            offCtx.textAlign = 'center';
+            offCtx.textBaseline = 'middle';
+            offCtx.fillText(config.text, width / 2, height / 2);
+
+            // 3. Get pixel data
+            const imageData = offCtx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+
+            // 4. Scan pixel data for non-transparent pixels
+            // Optimization: Skip pixels based on config.particleGap
+            for (let y = 0; y < height; y += config.particleGap) {
+                for (let x = 0; x < width; x += config.particleGap) {
+                    // Get alpha value (index + 3 of R,G,B,A)
+                    const index = (y * width + x) * 4 + 3;
+                    
+                    if (data[index] > 128) { // If pixel is visible enough
+                        // Create gradient color based on position
+                        const hue = (x / width) * 360 + (y / height) * 60;
+                        const color = `hsl(${hue}, 80%, 60%)`;
+                        
+                        particles.push(new Particle(x, y, color));
+                    }
+                }
+            }
+        }
+
+        // Main Animation Loop
+        function animate() {
+            // Clear canvas with slight fade for trail effect? 
+            // No, clean clear looks sharper for text.
+            ctx.clearRect(0, 0, width, height);
+            
+            // Add glow
+            ctx.globalCompositeOperation = 'lighter';
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            
+            ctx.globalCompositeOperation = 'source-over';
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        resize();
+        animate();
+
+    </script>
+</body>
+</html>
